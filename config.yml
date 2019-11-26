@@ -9,3 +9,4 @@ constants:
     - Offset
     - Size
     - ResponseTime
+  DATASET_FOLDER: dataset

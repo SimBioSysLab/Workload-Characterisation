@@ -1,8 +1,13 @@
 from cleaning import run as cleaning_run
-from const import Constants
+from loadconfig import Config
+
+def load_configurations():
+    config = Config()
+    config.load_yaml()
+
 
 def run_program():
-    pass
+    load_configurations()
 
 
 if __name__ == '__main__':

@@ -28,7 +28,7 @@ def convert_to_df(filename):
     for value in all_values:
         value[0] = convert_filetime_to_dt(float(value[0]))
 
-    file_path = "./dataset/{}".format(file_name)
+    file_path = "./dataset/cleaned_dataset/{}".format(file_name)
     dataset = pd.DataFrame(all_values, columns=HEADER_LIST)
     dataset.to_csv(file_path, index=False)
 

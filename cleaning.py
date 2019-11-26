@@ -1,9 +1,15 @@
+# LIST OF IN BUILT LIBRARIES
 import csv
-import glob
 import time
 from datetime import datetime
-import pandas as pd
 import os
+
+# LIST OF INSTALLED LIBRARIES
+import pandas as pd
+
+# PROJECT LIBRARIES
+from utils import get_all_uncleaned_files, get_cleaned_files_path
+
 
 EPOCH_AS_FILETIME = 116444736000000000  # January 1, 1970 as MS file time
 HUNDREDS_OF_NANOSECONDS = 10000000
@@ -22,24 +28,17 @@ def convert_to_df(filename):
     file_descriptor = open(filename, "r")
     file_reader = csv.reader(file_descriptor, delimiter=",")
     all_values = list(file_reader)
-    file_name = filename.split('/')[2]
-    file_name = "df{}".format(file_name)
-    
+
     for value in all_values:
         value[0] = convert_filetime_to_dt(float(value[0]))
 
-    file_path = "./dataset/cleaned_dataset/{}".format(file_name)
+    file_path = get_cleaned_files_path(file_name=filename)
     dataset = pd.DataFrame(all_values, columns=HEADER_LIST)
     dataset.to_csv(file_path, index=False)
 
 
-def get_file_names():
-    filenames = glob.glob("./dataset/*.csv")
-    return filenames
-
-
 def run():
-    all_files = get_file_names()
+    all_files = get_all_uncleaned_files()
     start_time = time.time()
     for file_ in all_files:
         print("Processing File: {}".format(file_))

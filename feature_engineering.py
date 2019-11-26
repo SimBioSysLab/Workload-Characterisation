@@ -8,7 +8,7 @@ def get_all_files():
     print(all_files_list) 
 
 
-def get_millisecond_value():
+def derive_interarrival_times():
     pass
 
 

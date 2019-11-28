@@ -1,5 +1,6 @@
 import yaml
 import os
+import logging
 
 
 class Configuration(object):
@@ -16,7 +17,12 @@ class Configuration(object):
         self.config_["HUNDREDS_OF_SECONDS"] = all_config_dict["CONSTANTS"]["HUNDREDS_OF_SECONDS"]
         self.config_["EPOCH_AS_FILETIME"] = all_config_dict["CONSTANTS"]["EPOCH_AS_FILETIME"]
         self.config_["HEADER_LIST"] = all_config_dict["CONSTANTS"]["HEADER_LIST"]
+        self.config_["DATASET_FOLDER"] = all_config_dict["CONSTANTS"]["DATASET_FOLDER"]
+
+    def load_logging_config(self):
+        logging.basicConfig(filename="example.log", level=logging.INFO)
 
 
 config = Configuration()
 config.load_yaml()
+config.load_logging_config()

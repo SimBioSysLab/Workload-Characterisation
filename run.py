@@ -1,13 +1,16 @@
 from cleaning import run as cleaning_run
-from loadconfig import Config
+
+from loadconfig import Configuration
+
 
 def load_configurations():
-    config = Config()
+    config = Configuration()
     config.load_yaml()
+    return config
 
 
 def run_program():
-    load_configurations()
+    config = load_configurations()
 
 
 if __name__ == '__main__':

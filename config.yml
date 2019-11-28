@@ -1,4 +1,4 @@
-constants:
+CONSTANTS:
   HUNDREDS_OF_SECONDS: 10000000
   EPOCH_AS_FILETIME: 116444736000000000
   HEADER_LIST:
@@ -9,4 +9,3 @@ constants:
     - Offset
     - Size
     - ResponseTime
-  DATASET_FOLDER: dataset

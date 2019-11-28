@@ -9,17 +9,13 @@ import pandas as pd
 
 # PROJECT LIBRARIES
 from utils import get_all_uncleaned_files, get_cleaned_files_path
-
-
-EPOCH_AS_FILETIME = 116444736000000000  # January 1, 1970 as MS file time
-HUNDREDS_OF_NANOSECONDS = 10000000
-HEADER_LIST = ["Timestamp", "Hostname", "DiskNumber", "Type", "Offset", "Size", "ResponseTime"]
+from loadconfig import config
 
 
 def convert_filetime_to_dt(filetime):
     if type(filetime) == str:
         filetime = float(filetime)
-    return datetime.utcfromtimestamp((filetime - EPOCH_AS_FILETIME) / HUNDREDS_OF_NANOSECONDS)
+    return datetime.utcfromtimestamp((filetime - config["EPOCH_AS_FILETIME"]) / config["HUNDREDS_OF_SECONDS"])
 
 
 def convert_to_df(filename):
@@ -33,7 +29,7 @@ def convert_to_df(filename):
         value[0] = convert_filetime_to_dt(float(value[0]))
 
     file_path = get_cleaned_files_path(file_name=filename)
-    dataset = pd.DataFrame(all_values, columns=HEADER_LIST)
+    dataset = pd.DataFrame(all_values, columns=config["HEADER_LIST"])
     dataset.to_csv(file_path, index=False)
 
 

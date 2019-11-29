@@ -21,8 +21,6 @@ def convert_filetime_to_dt(filetime):
 
 
 def convert_to_df(filename):
-    logging.info("Parent Process: {}".format(os.getppid()))
-    logging.info("Current Process: {}".format(os.getpid()))
     file_descriptor = open(filename, "r")
     file_reader = csv.reader(file_descriptor, delimiter=",")
     all_values = list(file_reader)

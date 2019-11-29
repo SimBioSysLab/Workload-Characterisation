@@ -1,6 +1,6 @@
-from cleaning import run as cleaning_run
-
 from loadconfig import Configuration
+from cleaning import run as cleaning_run
+from feature_engineering import run as feature_engineering_run
 
 
 def load_configurations():
@@ -10,7 +10,8 @@ def load_configurations():
 
 def run_program():
     load_configurations()
-    cleaning_run()
+    # cleaning_run()
+    feature_engineering_run()
 
 
 if __name__ == '__main__':

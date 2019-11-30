@@ -10,7 +10,7 @@ def get_all_uncleaned_files():
 def get_cleaned_files_path(file_name):
     df_file_name = file_name.split('/')[2]
     df_file_name = "df{}".format(df_file_name)
-    constructed_filename: str = "./{}/cleaned_dataset/{}".format(config.config_["DATASET_FOLDER"], df_file_name)
+    constructed_filename = "./{}/cleaned_dataset/{}".format(config.config_["DATASET_FOLDER"], df_file_name)
     return constructed_filename
 
 

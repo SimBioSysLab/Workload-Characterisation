@@ -1,4 +1,5 @@
 import glob
+import datetime
 from loadconfig import config
 
 
@@ -17,3 +18,8 @@ def get_cleaned_files_path(file_name):
 def get_all_cleaned_files():
     all_files_list = glob.glob("./{}/cleaned_dataset/*.csv".format(config.config_["DATASET_FOLDER"]))
     return all_files_list
+
+
+def unix_time_millis(dt):
+    dt_obj = datetime.datetime.strptime(date_string=dt)
+    print(dt_obj.second)

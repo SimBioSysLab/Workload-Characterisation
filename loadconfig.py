@@ -32,9 +32,6 @@ class Configuration(object):
         kv_pairs = all_config_dict["FUNCTIONALITIES"]
         for key in kv_pairs:
             self.config_["FUNCTIONALITIES"][key] = kv_pairs[key]
-            
-        print(self.config_)
-        exit()
 
     def load_logging_config(self):
         time_zone = pytz.timezone('US/Eastern')
@@ -42,7 +39,6 @@ class Configuration(object):
         date_as_string = curr_date.strftime('%Y-%m-%d_%H-%M-%S')
         logging.basicConfig(filename="./{}/{}.log".format(self.config_["LOGGING_FOLDER"], date_as_string),
                             level=logging.INFO)
-
 
 
 config = Configuration()

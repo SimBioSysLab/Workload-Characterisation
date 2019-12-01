@@ -21,6 +21,7 @@ class Configuration(object):
         self.config_["HEADER_LIST"] = all_config_dict["CONSTANTS"]["HEADER_LIST"]
         self.config_["DATASET_FOLDER"] = all_config_dict["CONSTANTS"]["DATASET_FOLDER"]
         self.config_["LOGGING_FOLDER"] = all_config_dict["CONSTANTS"]["LOGGING_FOLDER"]
+        self.config_["GRAPH_FOLDER"] = all_config_dict["CONSTANTS"]["GRAPH_FOLDER"]
 
         self.config_["FILE_CONSTANTS"] = dict()
         kv_pairs = all_config_dict["FILE_CONSTANTS"]

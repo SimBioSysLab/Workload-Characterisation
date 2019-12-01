@@ -11,6 +11,7 @@ CONSTANTS:
     - ResponseTime
   DATASET_FOLDER: dataset
   LOGGING_FOLDER: log
+  GRAPH_FOLDER: graphs
 
 FILE_CONSTANTS:
   hm: 1

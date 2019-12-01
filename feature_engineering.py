@@ -23,7 +23,7 @@ def derive_interarrival_times(file_name):
         else:
             time_stamp = arrow.get(row)
             curr_value = time_stamp.float_timestamp
-            difference = curr_value - prev_value
+            difference = (curr_value - prev_value) * 1000000
             difference_list.append(difference)
             prev_value = curr_value
     df_dataset["InterarrivalTime"] = difference_list

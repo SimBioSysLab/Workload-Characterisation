@@ -10,7 +10,7 @@ def load_configurations():
 
 def run_program():
     load_configurations()
-    # cleaning_run()
+    cleaning_run()
     feature_engineering_run()
 
 

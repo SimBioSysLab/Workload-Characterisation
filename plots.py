@@ -57,7 +57,6 @@ def run():
         file_name = file_name.split(".")[0]
         data_frame = pd.read_csv(file_)
 
-        # interarrival_hist_plot(in_ar_ti=data_frame, plot_title=file_name)
         size_hist_plot(size_dataset=data_frame, plot_title=file_name)
 
 

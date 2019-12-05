@@ -21,7 +21,7 @@ def building_model(dataset):
     print("Starting building the model")
     clustering = AgglomerativeClustering(n_clusters=3, affinity="manhattan", linkage="complete")
 
-    clustering.fit(dataset.head(10000))
+    clustering.fit(dataset)
     print(clustering.labels_)
     np.savetxt(X=clustering.labels_, fname="results.txt", fmt="%d")
     pprint.pprint(clustering.labels_)

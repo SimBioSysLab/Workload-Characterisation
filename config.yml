@@ -9,3 +9,24 @@ CONSTANTS:
     - Offset
     - Size
     - ResponseTime
+  DATASET_FOLDER: dataset
+  LOGGING_FOLDER: log
+  GRAPH_FOLDER: graphs
+
+FILE_CONSTANTS:
+  hm: 1
+  prn: 2
+  proj: 3
+  prxy: 4
+  rsrch: 5
+  src1: 6
+  src2: 7
+  stg: 8
+  ts: 9
+  usr: 10
+  wdev: 11
+  web: 12
+
+FUNCTIONALITIES:
+  Write: 1
+  Read: 2

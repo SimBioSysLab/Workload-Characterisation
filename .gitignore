@@ -213,5 +213,6 @@ venv.bak/
 dataset/
 pip-selfcheck.json
 .vscode/
-
+graphs/
+*.log
 # End of https://www.gitignore.io/api/python,virtualenv,pycharm+all

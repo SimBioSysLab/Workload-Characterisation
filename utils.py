@@ -25,6 +25,11 @@ def get_writing_file_name():
     return file_name
 
 
+def get_project_dataset():
+    file_name = "./{}/combined_dataset.csv".format(config.config_["DATASET_FOLDER"])
+    return file_name
+
+
 def unix_time_millis(dt):
     dt_obj = datetime.datetime.strptime(date_string=dt)
     print(dt_obj.second)

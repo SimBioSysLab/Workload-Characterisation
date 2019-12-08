@@ -43,20 +43,21 @@ def convert_hostname_to_number(file_name):
 
 
 def extract_project_dataset():
+    logging.info("Starting Extraction on Dataset")
+
     all_files_list = get_all_cleaned_files()
     column_list = config.config_["HEADER_LIST"]
     column_list.append("InterarrivalTime")
     all_df_list = pd.DataFrame(columns=column_list)
 
     for file_ in all_files_list:
+        logging.info("Starting on file: {}".format(file_))
         temp_dataset = pd.read_csv(file_)
         print(temp_dataset)
         del temp_dataset["Unnamed: 0"]
         temp_dataset_ = temp_dataset.head(2000)
-        print(temp_dataset_)
-        all_df_list.append(temp_dataset_, sort=False)
+        all_df_list = all_df_list.append(temp_dataset_, sort=False, ignore_index=True)
 
-    print(all_df_list)
     all_df_list.to_csv(path_or_buf=get_writing_file_name(), index=False)
     return 1
 

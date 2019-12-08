@@ -215,6 +215,6 @@ pip-selfcheck.json
 .vscode/
 graphs/
 *.log
-results.txt
+results*.txt
 *.png
 # End of https://www.gitignore.io/api/python,virtualenv,pycharm+all

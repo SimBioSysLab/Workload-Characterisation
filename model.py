@@ -46,7 +46,6 @@ def linkage_heirarchy(dataset):
     print(leaves_list)
     # print(ip_dataset)
 
-
 def run():
     files = get_all_cleaned_files()
     dataset = pd.read_csv(files[0])

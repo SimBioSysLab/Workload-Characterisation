@@ -12,8 +12,8 @@ def load_configurations():
 def run_program():
     load_configurations()
     # cleaning_run()
-    # feature_engineering_run()
-    plot_run()
+    feature_engineering_run()
+    # plot_run()
 
 
 if __name__ == '__main__':

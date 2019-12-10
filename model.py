@@ -14,6 +14,7 @@ from utils import get_all_cleaned_files, get_project_dataset
 def building_model(dataset):
 
     del dataset["Timestamp"]
+    del dataset["DiskNumber"]
 
     dataset = dataset.dropna()
 
@@ -22,7 +23,7 @@ def building_model(dataset):
 
     clustering.fit(dataset)
     print(clustering.labels_)
-    np.savetxt(X=clustering.labels_, fname="results_3.txt", fmt="%d")
+    np.savetxt(X=clustering.labels_, fname="results_5.txt", fmt="%d")
     pprint.pprint(clustering.labels_)
     logging.info(clustering.children_)
     logging.info(clustering.n_clusters_)

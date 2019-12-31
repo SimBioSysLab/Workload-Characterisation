@@ -3,14 +3,13 @@ import csv
 import logging
 import time
 from datetime import datetime
-import os
 
 # LIST OF INSTALLED LIBRARIES
 import pandas as pd
 
 # PROJECT LIBRARIES
 from utils import get_all_uncleaned_files, get_cleaned_files_path
-from loadconfig import config
+from msr_ml_proj.loadconfig import config
 
 
 def convert_filetime_to_dt(filetime):

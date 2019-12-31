@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from utils import get_all_cleaned_files
-from loadconfig import config
+from msr_ml_proj.loadconfig import config
 
 
 def interarrival_hist_plot(in_ar_ti, plot_title):

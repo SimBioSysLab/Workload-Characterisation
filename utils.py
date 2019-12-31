@@ -1,11 +1,9 @@
 import glob
 import datetime
-from loadconfig import config
 
 
-def get_all_uncleaned_files():
-    all_files_list = glob.glob("./{}/*.csv".format(config.config_["DATASET_FOLDER"]))
-    return all_files_list
+def get_all_cp_files():
+    pass
 
 
 def get_cleaned_files_path(file_name):

@@ -2,10 +2,6 @@ import glob
 import datetime
 
 
-def get_all_cp_files():
-    pass
-
-
 def get_cleaned_files_path(file_name):
     df_file_name = file_name.split('/')[2]
     df_file_name = "df{}".format(df_file_name)
@@ -20,11 +16,6 @@ def get_all_cleaned_files():
 
 def get_writing_file_name():
     file_name = "./{}/all_result.csv".format(config.config_["DATASET_FOLDER"])
-    return file_name
-
-
-def get_project_dataset():
-    file_name = "./{}/combined_dataset.csv".format(config.config_["DATASET_FOLDER"])
     return file_name
 
 

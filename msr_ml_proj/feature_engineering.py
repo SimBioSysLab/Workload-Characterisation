@@ -4,7 +4,7 @@ import arrow
 import pandas as pd
 
 
-from msr_ml_proj.loadconfig import config
+from loadconfig import config
 from utils import get_all_cleaned_files
 
 

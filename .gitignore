@@ -217,4 +217,5 @@ graphs/
 *.log
 results*.txt
 *.png
+cp.yml
 # End of https://www.gitignore.io/api/python,virtualenv,pycharm+all

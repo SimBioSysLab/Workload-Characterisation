@@ -9,7 +9,7 @@ import pandas as pd
 
 # PROJECT LIBRARIES
 from utils import get_all_uncleaned_files, get_cleaned_files_path
-from msr_ml_proj.loadconfig import config
+from loadconfig import config
 
 
 def convert_filetime_to_dt(filetime):

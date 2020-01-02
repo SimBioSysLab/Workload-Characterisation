@@ -3,7 +3,6 @@ import csv
 import logging
 import time
 from datetime import datetime
-import os
 
 # LIST OF INSTALLED LIBRARIES
 import pandas as pd

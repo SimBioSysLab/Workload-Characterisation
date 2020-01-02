@@ -1,11 +1,5 @@
 import glob
 import datetime
-from loadconfig import config
-
-
-def get_all_uncleaned_files():
-    all_files_list = glob.glob("./{}/*.csv".format(config.config_["DATASET_FOLDER"]))
-    return all_files_list
 
 
 def get_cleaned_files_path(file_name):
@@ -18,6 +12,11 @@ def get_cleaned_files_path(file_name):
 def get_all_cleaned_files():
     all_files_list = glob.glob("./{}/cleaned_dataset/*.csv".format(config.config_["DATASET_FOLDER"]))
     return all_files_list
+
+
+def get_writing_file_name():
+    file_name = "./{}/all_result.csv".format(config.config_["DATASET_FOLDER"])
+    return file_name
 
 
 def unix_time_millis(dt):

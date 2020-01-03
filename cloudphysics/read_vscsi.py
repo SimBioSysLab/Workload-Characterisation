@@ -1,6 +1,6 @@
 import time
 
-import pandas as pd
+import csv
 from PyMimircache import Cachecow
 
 from cloudphysics.utils import read_all_cp_trace_files, ret_file_name_csv
@@ -28,8 +28,10 @@ def convert_to_csv(file_name):
 
     if trace_type == 1:
 
-        changed_dataset = pd.DataFrame(columns=config.config_["TYPE_1_INDICES"])
         data = reader.read_complete_req()
+
+        csv_file = open(act_name, mode='w')
+        csv_writer = csv.DictWriter(csv_file, fieldnames=type_1_dict.keys())
         while data:
             if i % 1000 == 0:
                 logging.info("Finished {} records of type 1 and file {}".format(i, file_name))
@@ -41,15 +43,15 @@ def convert_to_csv(file_name):
                 "TIME_STAMP": data[type_1_dict["TIME_STAMP"]],
             }
 
-            changed_dataset = changed_dataset.append(temp_dict,ignore_index=True)
-
+            csv_writer.writerow(temp_dict)
             # print(data)
             data = reader.read_complete_req()
             i = i + 1
 
     else:
 
-        changed_dataset = pd.DataFrame(columns=config.config_["TYPE_2_INDICES"])
+        csv_file = open(act_name, mode='w')
+        csv_writer = csv.DictWriter(csv_file, fieldnames=type_2_dict.keys())
         data = reader.read_complete_req()
         while data:
             if i % 1000 == 0:
@@ -63,12 +65,11 @@ def convert_to_csv(file_name):
                 "RESPONSE_TIME": data[type_2_dict["RESPONSE_TIME"]],
             }
 
-            changed_dataset = changed_dataset.append(temp_dict, ignore_index=True)
+            csv_writer.writerow(temp_dict)
             # print(temp_dict)
             data = reader.read_complete_req()
             i = i + 1
-    logging.info("Writing to file {}".format(act_name))
-    changed_dataset.to_csv(act_name, index=False)
+
 
     return 1
 

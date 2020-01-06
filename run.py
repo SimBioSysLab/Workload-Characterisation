@@ -3,6 +3,7 @@ import time
 
 from loadconfig import config
 from cloudphysics.read_vscsi import run_reading
+from cloudphysics.feature_engineering import run_feature_engineering
 
 
 def load_configuration(dataset):
@@ -20,7 +21,8 @@ def load_configuration(dataset):
 
 def run_cp_traces():
     st_time = time.time()
-    run_reading()
+    # run_reading()
+    run_feature_engineering()
     end_time = time.time()
     time_ = end_time - st_time
     logging.info("Total running time is : {}".format(time_))

@@ -33,6 +33,7 @@ def convert_to_csv(file_name):
         csv_file = open(act_name, mode='w')
         csv_writer = csv.DictWriter(csv_file, fieldnames=type_1_dict.keys())
         while data:
+
             if i % 1000 == 0:
                 logging.info("Finished {} records of type 1 and file {}".format(i, file_name))
                 
@@ -69,7 +70,6 @@ def convert_to_csv(file_name):
             # print(temp_dict)
             data = reader.read_complete_req()
             i = i + 1
-
 
     return 1
 

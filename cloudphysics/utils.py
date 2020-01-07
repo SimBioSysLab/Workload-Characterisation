@@ -11,7 +11,7 @@ def read_all_cp_trace_files():
 def ret_file_name_csv(filename):
     actual_name = filename.split("/")[-1]
     actual_name = actual_name.split(".")[0]
-    actual_name = "{}_1.csv".format(actual_name)
+    actual_name = "{}.csv".format(actual_name)
 
     file_location = "./{}/cloudphysics/csv/{}".format(config.config_["DATASET_FOLDER"], actual_name)
     return file_location

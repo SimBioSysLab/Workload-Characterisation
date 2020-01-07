@@ -32,11 +32,14 @@ def convert_to_csv(file_name):
 
         csv_file = open(act_name, mode='w')
         csv_writer = csv.DictWriter(csv_file, fieldnames=type_1_dict.keys())
+        csv_writer.writeheader()
+
         while data:
 
-            if i % 1000 == 0:
+            if i % 10000 == 0:
                 logging.info("Finished {} records of type 1 and file {}".format(i, file_name))
-                
+                break
+
             temp_dict = {
                 "LEN": data[type_1_dict["LEN"]],
                 "OP_CODE": data[type_1_dict["OP_CODE"]],
@@ -54,10 +57,11 @@ def convert_to_csv(file_name):
         csv_file = open(act_name, mode='w')
         csv_writer = csv.DictWriter(csv_file, fieldnames=type_2_dict.keys())
         data = reader.read_complete_req()
+        csv_writer.writeheader()
         while data:
-            if i % 1000 == 0:
+            if i % 10000 == 0:
                 logging.info("Finished {} records of type 1 and file {}".format(i, file_name))
-
+                break
             temp_dict = {
                 "LEN": data[type_2_dict["LEN"]],
                 "OP_CODE": data[type_2_dict["OP_CODE"]],

@@ -13,7 +13,12 @@ def convert_to_opcodes(filename):
     dataset_file = open(filename, "r")
     file_details = csv.DictReader(dataset_file)
 
-    file_keys = file_details.fieldnames + ["BIN_OPCODE"]
+    file_keys = file_details.fieldnames
+
+    if "BIN_OPCODE" not in file_keys:
+        file_keys = file_keys + ["BIN_OPCODE"]
+    else:
+        return
 
     new_file_name = ret_file_name_modified_file(filename=filename)
     writing_file_d = open(new_file_name, "w")
@@ -24,14 +29,23 @@ def convert_to_opcodes(filename):
     i = 0
     dict_list = []
 
+    value = -2
     for row in file_details:
-        if i % 1000 == 0:
+
+        if i % 10000 == 0:
             logging.info("Finished {} lines of {}".format(i, filename))
 
-        if int(row["OP_CODE"]) in read_opcodes:
-            row["BIN_OPCODE"] = 0
-        else:
-            row["BIN_OPCODE"] = 1
+        try:
+            value = int(row["OP_CODE"])
+            if value in read_opcodes:
+                row["BIN_OPCODE"] = 0
+            else:
+                row["BIN_OPCODE"] = 1
+
+        except ValueError as e:
+            logging.info("The exception is {} and value is {}".format(e, row["OP_CODE"]))
+            row["BIN_CODE"] = -1
+
         i += 1
 
         file_writer.writerow(row)

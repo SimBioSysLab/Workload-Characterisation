@@ -24,7 +24,14 @@ def convert_to_csv(file_name):
     act_name = ret_file_name_csv(filename=file_name)
 
     c = Cachecow()
-    reader = c.vscsi(file_path=file_name, vscsi_type=trace_type)
+
+    try:
+        reader = c.vscsi(file_path=file_name, vscsi_type=trace_type)
+
+    except AssertionError as e:
+        logging.info("The exception is {}".format(e))
+        logging.info("Excepted file name is {}".format(file_name))
+        return
 
     if trace_type == 1:
 

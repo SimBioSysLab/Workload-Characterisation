@@ -43,7 +43,7 @@ def convert_to_opcodes(filename):
                 row["BIN_OPCODE"] = 1
 
         except ValueError as e:
-            logging.info("The exception is {} and value is {}".format(e, row["OP_CODE"]))
+            logging.info("The exception is {}, file is {} and value is {}".format(e, filename, row["OP_CODE"]))
             row["BIN_CODE"] = -1
 
         i += 1

@@ -18,6 +18,7 @@ def convert_to_opcodes(filename):
     if "BIN_OPCODE" not in file_keys:
         file_keys = file_keys + ["BIN_OPCODE"]
     else:
+        logging.info("File {} already exists. No need to convert things!".format(filename))
         return
 
     new_file_name = ret_file_name_modified_file(filename=filename)
@@ -26,7 +27,7 @@ def convert_to_opcodes(filename):
     file_writer.writeheader()
 
     read_opcodes = config.config_["READ_OPCODES"]
-    i = 0
+    i = 1
     dict_list = []
 
     value = -2

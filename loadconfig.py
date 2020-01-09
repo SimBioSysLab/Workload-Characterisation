@@ -42,6 +42,7 @@ class Configuration(object):
         self.config_["DATASET_FOLDER"] = all_config_dict["CONSTANTS"]["DATASET_FOLDER"]
         self.config_["LOGGING_FOLDER"] = all_config_dict["CONSTANTS"]["LOGGING_FOLDER"]
         self.config_["GRAPH_FOLDER"] = all_config_dict["CONSTANTS"]["GRAPH_FOLDER"]
+        self.config_["RESULTS_FOLDER"] = all_config_dict["CONSTANTS"]["RESULTS_FOLDER"]
 
         self.config_["READ_OPCODES"] = all_config_dict["READ_OPCODES"]
         self.config_["WRITE_OPCODES"] = all_config_dict["WRITE_OPCODES"]

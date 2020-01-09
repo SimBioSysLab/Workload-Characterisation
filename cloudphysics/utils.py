@@ -40,3 +40,12 @@ def ret_file_name_modified_file(filename):
         file_location = "./{}/cloudphysics/csv/generated/{}".format(config.config_["DATASET_FOLDER"], actual_name)
 
     return file_location
+
+
+def ret_read_write_json_path(filename):
+
+    actual_name = filename.split("/")[-1]
+    actual_name = actual_name.split(".")[0]
+
+    read_write_json_file_path = "./{}/result.json".format(config.config_["RESULTS_FOLDER"])
+    return read_write_json_file_path, actual_name

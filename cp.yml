@@ -2,6 +2,7 @@ CONSTANTS:
   DATASET_FOLDER: dataset
   LOGGING_FOLDER: log
   GRAPH_FOLDER: graphs
+  RESULTS_FOLDER: results
 
 READ_OPCODES:
   - 40

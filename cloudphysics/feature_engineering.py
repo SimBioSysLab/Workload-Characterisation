@@ -1,10 +1,13 @@
 import os
 import csv
+import json
 import logging
 import time
 
 from loadconfig import config
-from cloudphysics.utils import ret_all_csv_trace_files, ret_file_name_modified_file
+from cloudphysics.utils import ret_all_csv_trace_files, ret_file_name_modified_file, ret_read_write_json_path
+
+temp_read_write_list = []
 
 
 def convert_to_opcodes(filename):
@@ -56,11 +59,55 @@ def convert_to_opcodes(filename):
         os.rename(new_file_name, filename)
 
 
+def number_of_read_and_writes(filename):
+
+    logging.info("Starting count of read and write {}".format(filename))
+    i = 0
+    dataset_file = open(filename, "r")
+    file_details = csv.DictReader(dataset_file)
+
+    if "BIN_OPCODE" not in file_details.fieldnames:
+        logging.info("File {} doesn't have Bin Opcode".format(filename))
+
+    read_count = 0
+    write_count = 0
+    i = 1
+
+    for row in file_details:
+        if i % 10000 == 0:
+            logging.info("Process {} lines of file {}".format(i, filename))
+            break
+
+        if int(row["BIN_OPCODE"]) == 0:
+            read_count = read_count + 1
+        else:
+            write_count = write_count + 1
+
+    return read_count, write_count
+
+
+def read_write_list(filename):
+
+    write_to_file, json_value = ret_read_write_json_path(filename)
+    json_fp = open(file=write_to_file, mode="w")
+    read, write = number_of_read_and_writes(filename=filename)
+    temp_dict = {
+        "read_count": read,
+        "write_count": write,
+        "filename": json_value
+    }
+
+    temp_read_write_list.append(temp_dict)
+    json.dump(obj=temp_read_write_list, fp=json_fp)
+    return 1
+
+
 def run_feature_engineering():
     all_files_list = ret_all_csv_trace_files()
     for file_ in all_files_list:
         start_time = time.time()
-        convert_to_opcodes(filename=file_)
+        # convert_to_opcodes(filename=file_)
+        read_write_list(filename=file_)
         end_time = time.time()
         k = end_time - start_time
         logging.info("The time taken to execute {} is {}".format(file_, k))

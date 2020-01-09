@@ -12,6 +12,7 @@ CONSTANTS:
   DATASET_FOLDER: dataset
   LOGGING_FOLDER: log
   GRAPH_FOLDER: graphs
+  RESULTS_FOLDER: results
 
 FILE_CONSTANTS:
   hm: 1

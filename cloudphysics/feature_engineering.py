@@ -76,12 +76,13 @@ def number_of_read_and_writes(filename):
     for row in file_details:
         if i % 10000 == 0:
             logging.info("Process {} lines of file {}".format(i, filename))
-            break
 
         if int(row["BIN_OPCODE"]) == 0:
             read_count = read_count + 1
         else:
             write_count = write_count + 1
+
+        i = i + 1
 
     return read_count, write_count
 

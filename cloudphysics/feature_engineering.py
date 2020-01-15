@@ -5,7 +5,9 @@ import logging
 import time
 
 from loadconfig import config
-from cloudphysics.utils import ret_all_csv_trace_files, ret_file_name_modified_file, ret_read_write_json_path
+from cloudphysics.utils import ret_all_csv_trace_files, ret_file_name_modified_file, ret_read_write_json_path, \
+    return_rw_ia_json
+
 
 temp_read_write_list = []
 
@@ -98,7 +100,48 @@ def generate_inter_arrival_times(filename):
 
 
 def generate_rw_ia_times(filename):
-    pass
+
+    logging.info("Starting RW IA calculation for file {}".format(filename))
+
+    logging.info("Starting count of read and write {}".format(filename))
+    i = 1
+    dataset_file = open(filename, "r")
+    file_details = csv.DictReader(dataset_file)
+
+    read_ia_list = []
+    write_ia_list = []
+
+    last_read_time = -1
+    last_write_time = -1
+    for row_ in file_details:
+        if i % 10000 == 0:
+            logging.info("Finished processing {} lines of file {}".format(i, filename))
+
+        if int(row_["BIN_OPCODE"]) == 0:
+            if last_read_time == -1:
+                read_ia_list.append(row_["TIME_STAMP"])
+                last_read_time = float(row_["TIME_STAMP"])
+            else:
+                read_ia_list.append(float(row_["TIME_STAMP"]) - last_read_time)
+                last_read_time = float(row_["TIME_STAMP"])
+        else:
+            if last_write_time == -1:
+                write_ia_list.append(row_["TIME_STAMP"])
+                last_write_time = float(row_["TIME_STAMP"])
+            else:
+                write_ia_list.append(float(row_["TIME_STAMP"]) - last_write_time)
+                last_write_time = float(row_["TIME_STAMP"])
+        i = i + 1
+
+    opfile_details, actual_name = return_rw_ia_json(filename)
+    op_dict = {
+        "file_name": actual_name,
+        "read_list": read_ia_list,
+        "write_list": write_ia_list
+    }
+    logging.info("Writing file {} to {}".format(actual_name, opfile_details))
+    file_fd = open(opfile_details, "w")
+    json.dump(op_dict, file_fd)
 
 
 def number_of_read_and_writes(filename):
@@ -151,7 +194,8 @@ def run_feature_engineering():
         start_time = time.time()
         # convert_to_opcodes(filename=file_)
         # read_write_list(filename=file_)
-        generate_inter_arrival_times(filename=file_)
+        # generate_inter_arrival_times(filename=file_)
+        generate_rw_ia_times(filename=file_)
         end_time = time.time()
         k = end_time - start_time
         logging.info("The time taken to execute {} is {}".format(file_, k))

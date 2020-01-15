@@ -71,3 +71,11 @@ def return_iat_graph_path(filename):
 
     actual_path = "./{}/iat/{}.eps".format(config.config_["GRAPH_FOLDER"], actual_name)
     return actual_path, actual_name
+
+
+def return_rw_ia_json(filename):
+    actual_name = filename.split("/")[-1]
+    actual_name = actual_name.split(".")[0]
+
+    actual_path = "./{}/rwia/{}.json".format(config.config_["RESULTS_FOLDER"], actual_name)
+    return actual_path, actual_name

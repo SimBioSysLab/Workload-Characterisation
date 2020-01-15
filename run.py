@@ -4,6 +4,7 @@ import time
 from loadconfig import config
 from cloudphysics.read_vscsi import run_reading
 from cloudphysics.feature_engineering import run_feature_engineering
+from cloudphysics.graph_generator import run_generate_graphs
 
 
 def load_configuration(dataset):
@@ -23,6 +24,7 @@ def run_cp_traces():
     st_time = time.time()
     # run_reading()
     run_feature_engineering()
+    # run_generate_graphs()
     end_time = time.time()
     time_ = end_time - st_time
     logging.info("Total running time is : {}".format(time_))

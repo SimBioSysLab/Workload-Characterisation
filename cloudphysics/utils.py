@@ -49,3 +49,17 @@ def ret_read_write_json_path(filename):
 
     read_write_json_file_path = "./{}/result.json".format(config.config_["RESULTS_FOLDER"])
     return read_write_json_file_path, actual_name
+
+
+def ret_server_result_json():
+
+    actual_path = "./{}/server_data/server_result.json".format(config.config_["RESULTS_FOLDER"])
+
+    return actual_path
+
+
+def return_rw_graph_path():
+
+    actual_path = "./{}/rwgraph.eps".format(config.config_["GRAPH_FOLDER"])
+
+    return actual_path

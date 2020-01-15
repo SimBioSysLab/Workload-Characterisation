@@ -97,6 +97,10 @@ def generate_inter_arrival_times(filename):
         os.rename(new_file_name, filename)
 
 
+def generate_rw_ia_times(filename):
+    pass
+
+
 def number_of_read_and_writes(filename):
 
     logging.info("Starting count of read and write {}".format(filename))

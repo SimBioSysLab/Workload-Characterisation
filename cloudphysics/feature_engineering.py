@@ -90,6 +90,7 @@ def generate_inter_arrival_times(filename):
             last_time_stamp = float(row["TIME_STAMP"])
 
         file_writer.writerow(row)
+        i = i + 1
 
     if "generated" in filename:
         os.remove(filename)

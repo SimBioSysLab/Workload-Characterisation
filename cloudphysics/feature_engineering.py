@@ -31,9 +31,7 @@ def convert_to_opcodes(filename):
 
     read_opcodes = config.config_["READ_OPCODES"]
     i = 1
-    dict_list = []
 
-    value = -2
     for row in file_details:
 
         if i % 10000 == 0:
@@ -51,6 +49,45 @@ def convert_to_opcodes(filename):
             row["BIN_CODE"] = -1
 
         i += 1
+
+        file_writer.writerow(row)
+
+    if "generated" in filename:
+        os.remove(filename)
+        os.rename(new_file_name, filename)
+
+
+def generate_inter_arrival_times(filename):
+    logging.info("Starting inter arrival-request conversion of file {}".format(filename))
+    dataset_file = open(filename, "r")
+    file_details = csv.DictReader(dataset_file)
+
+    file_keys = file_details.fieldnames
+
+    if "INTERARRIVAL" not in file_keys:
+        file_keys = file_keys + ["INTERARRIVAL"]
+    else:
+        logging.info("File {} already exists. No need to calculate the timings!".format(filename))
+        return
+
+    last_time_stamp = -1
+
+    new_file_name = ret_file_name_modified_file(filename=filename)
+    writing_file_d = open(new_file_name, "w")
+    file_writer = csv.DictWriter(writing_file_d, fieldnames=file_keys)
+    file_writer.writeheader()
+
+    i = 1
+    for row in file_details:
+        if i % 10000 == 0:
+            logging.info("Finished {} lines of {}".format(i, filename))
+
+        if last_time_stamp == -1:
+            row["INTERARRIVAL"] = -1
+            last_time_stamp = float(row["TIME_STAMP"])
+        else:
+            row["INTERARRIVAL"] = float(row["TIME_STAMP"]) - last_time_stamp
+            last_time_stamp = float(row["TIME_STAMP"])
 
         file_writer.writerow(row)
 
@@ -108,7 +145,8 @@ def run_feature_engineering():
     for file_ in all_files_list:
         start_time = time.time()
         # convert_to_opcodes(filename=file_)
-        read_write_list(filename=file_)
+        # read_write_list(filename=file_)
+        generate_inter_arrival_times(filename=file_)
         end_time = time.time()
         k = end_time - start_time
         logging.info("The time taken to execute {} is {}".format(file_, k))

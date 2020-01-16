@@ -6,7 +6,7 @@ import time
 
 from loadconfig import config
 from cloudphysics.utils import ret_all_csv_trace_files, ret_file_name_modified_file, ret_read_write_json_path, \
-    return_rw_ia_json
+    return_rw_ia_json, return_block_rw_ia_json
 
 
 temp_read_write_list = []
@@ -188,6 +188,49 @@ def read_write_list(filename):
     return 1
 
 
+def read_write_block_count(filename):
+
+    logging.info("Start read write for each block {}".format(filename))
+
+    i = 1
+    dataset_file = open(filename, "r")
+    file_details = csv.DictReader(dataset_file)
+
+    output_dict = dict()
+    for row in file_details:
+        if i % 100000:
+            logging.info("Finished processing {} lines of file {}".format(i, filename))
+
+        if row["BLOCK_NUMBER"] not in output_dict.keys():
+            if int(row["BIN_OPCODE"]) == 0:
+                output_dict[row["BLOCK_NUMBER"]] = {
+                    "read_list": [float(row["TIME_STAMP"])],
+                    "write_list": []
+                }
+            else:
+                output_dict[row["BLOCK_NUMBER"]] = {
+                    "read_list": [],
+                    "write_list": [float(row["TIME_STAMP"])]
+                }
+        else:
+            if int(row["BIN_OPCODE"]) == 0:
+                if output_dict[row["BLOCK_NUMBER"]]["read_list"]:
+                    output_dict[row["BLOCK_NUMBER"]]["read_list"].append(float(row["TIME_STAMP"]))
+                else:
+                    output_dict[row["BLOCK_NUMBER"]]["read_list"].append(float(row["TIME_STAMP"]))
+            else:
+                if output_dict[row["BLOCK_NUMBER"]]["write_list"]:
+                    output_dict[row["BLOCK_NUMBER"]]["write_list"].append(float(row["TIME_STAMP"]))
+                else:
+                    output_dict[row["BLOCK_NUMBER"]]["write_list"].append(float(row["TIME_STAMP"]))
+        i = i + 1
+
+    output_file_name, actual_name = return_block_rw_ia_json(filename=filename)
+    op_file_fd = open(output_file_name, "w")
+    json.dump(obj=output_dict, fp=op_file_fd)
+    return 1
+
+
 def run_feature_engineering():
     all_files_list = ret_all_csv_trace_files()
     for file_ in all_files_list:
@@ -195,7 +238,8 @@ def run_feature_engineering():
         # convert_to_opcodes(filename=file_)
         # read_write_list(filename=file_)
         # generate_inter_arrival_times(filename=file_)
-        generate_rw_ia_times(filename=file_)
+        # generate_rw_ia_times(filename=file_)
+        read_write_block_count(filename=file_)
         end_time = time.time()
         k = end_time - start_time
         logging.info("The time taken to execute {} is {}".format(file_, k))

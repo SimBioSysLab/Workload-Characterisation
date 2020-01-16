@@ -236,13 +236,15 @@ def workload_metadata(filename):
     logging.info("Starting workload calculations of file {}".format(filename))
     i = 1
     dataset = pd.read_csv(filename)
-    new_df = dataset["INTERARRIVAL"]
+    new_df = pd.DataFrame(dataset["INTERARRIVAL"], columns=["INTERARRIVAL"])
+    print(new_df)
+    new_df = new_df[new_df.INTERARRIVAL != -1]
     del dataset
     range = new_df.max() - new_df.min()
     average = new_df.mean()
     median = new_df.median()
 
-    return range, average, median
+    return range[0], average[0], median[0]
 
 
 def workload_metadata_list(filename):

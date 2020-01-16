@@ -3,10 +3,11 @@ import csv
 import json
 import logging
 import time
+import pandas as pd
 
 from loadconfig import config
 from cloudphysics.utils import ret_all_csv_trace_files, ret_file_name_modified_file, ret_read_write_json_path, \
-    return_rw_ia_json, return_block_rw_ia_json
+    return_rw_ia_json, return_block_rw_ia_json, ret_workload_metadata_path
 
 
 temp_read_write_list = []
@@ -231,6 +232,38 @@ def read_write_block_count(filename):
     return 1
 
 
+def workload_metadata(filename):
+    logging.info("Starting workload calculations of file {}".format(filename))
+    i = 1
+    dataset = pd.read_csv(filename)
+    new_df = dataset["INTERARRIVAL"]
+    del dataset
+    range = new_df.max() - new_df.min()
+    average = new_df.mean()
+    median = new_df.median()
+
+    return range, average, median
+
+
+def workload_metadata_list(filename):
+
+    write_to_file, json_value = ret_workload_metadata_path(filename)
+    json_fp = open(file=write_to_file, mode="w")
+    range, average, median = workload_metadata(filename=filename)
+    print(range, average, median)
+    temp_dict = {
+        "range": range,
+        "average": average,
+        "median": median,
+        "filename": json_value
+    }
+
+    temp_read_write_list.append(temp_dict)
+    logging.info("Writing info {} to json file".format(json_value))
+    json.dump(obj=temp_read_write_list, fp=json_fp)
+    return 1
+
+
 def run_feature_engineering():
     all_files_list = ret_all_csv_trace_files()
     for file_ in all_files_list:
@@ -239,7 +272,8 @@ def run_feature_engineering():
         # read_write_list(filename=file_)
         # generate_inter_arrival_times(filename=file_)
         # generate_rw_ia_times(filename=file_)
-        read_write_block_count(filename=file_)
+        # read_write_block_count(filename=file_)
+        workload_metadata_list(filename=file_)
         end_time = time.time()
         k = end_time - start_time
         logging.info("The time taken to execute {} is {}".format(file_, k))

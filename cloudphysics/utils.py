@@ -79,3 +79,11 @@ def return_rw_ia_json(filename):
 
     actual_path = "./{}/rwia/{}.json".format(config.config_["RESULTS_FOLDER"], actual_name)
     return actual_path, actual_name
+
+
+def return_block_rw_ia_json(filename):
+    actual_name = filename.split("/")[-1]
+    actual_name = actual_name.split(".")[0]
+
+    actual_path = "./{}/block_rwia/{}.json".format(config.config_["RESULTS_FOLDER"], actual_name)
+    return actual_path, actual_name

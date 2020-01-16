@@ -198,7 +198,7 @@ def read_write_block_count(filename):
 
     output_dict = dict()
     for row in file_details:
-        if i % 100000:
+        if i % 100000 == 0:
             logging.info("Finished processing {} lines of file {}".format(i, filename))
 
         if row["BLOCK_NUMBER"] not in output_dict.keys():

@@ -8,10 +8,10 @@ import pandas as pd
 from loadconfig import config
 from cloudphysics.utils import ret_all_csv_trace_files, ret_file_name_modified_file, ret_read_write_json_path, \
     return_rw_ia_json, return_block_rw_ia_json, ret_workload_metadata_path, ret_workload_rw_metadata_path, \
-    ret_block_len_stats
+    ret_block_len_stats, ret_unique_block_count_path
 
 
-temp_read_write_list = []
+temp_anything_list = []
 
 
 def convert_to_opcodes(filename):
@@ -185,8 +185,8 @@ def read_write_list(filename):
         "filename": json_value
     }
 
-    temp_read_write_list.append(temp_dict)
-    json.dump(obj=temp_read_write_list, fp=json_fp)
+    temp_anything_list.append(temp_dict)
+    json.dump(obj=temp_anything_list, fp=json_fp)
     return 1
 
 
@@ -261,9 +261,9 @@ def workload_metadata_list(filename):
         "filename": json_value
     }
 
-    temp_read_write_list.append(temp_dict)
+    temp_anything_list.append(temp_dict)
     logging.info("Writing info {} to json file".format(json_value))
-    json.dump(obj=temp_read_write_list, fp=json_fp)
+    json.dump(obj=temp_anything_list, fp=json_fp)
     return 1
 
 
@@ -299,9 +299,9 @@ def workload_metadata_rw_list(filename):
         "filename": json_value
     }
 
-    temp_read_write_list.append(temp_dict)
+    temp_anything_list.append(temp_dict)
     logging.info("Writing info {} to json file".format(json_value))
-    json.dump(obj=temp_read_write_list, fp=json_fp)
+    json.dump(obj=temp_anything_list, fp=json_fp)
     return 1
 
 
@@ -331,9 +331,32 @@ def block_length_list(filename):
         "filename": json_value
     }
 
-    temp_read_write_list.append(temp_dict)
+    temp_anything_list.append(temp_dict)
     logging.info("Writing info {} to json file".format(json_value))
-    json.dump(obj=temp_read_write_list, fp=json_fp)
+    json.dump(obj=temp_anything_list, fp=json_fp)
+    return 1
+
+
+def get_unique_block_count(filename):
+    logging.info("Starting unique block count of file {}".format(filename))
+    dataset = pd.read_csv(filename)
+    unique_block_lists = dataset.BLOCK_NUMBER.unique().tolist()
+    unique_block_count = dataset.BLOCK_NUMBER.nunique()
+
+    return unique_block_lists, unique_block_count
+
+
+def unique_block_length_list(filename):
+    write_to_file, json_value = ret_unique_block_count_path(filename=filename)
+    json_fp = open(file=write_to_file, mode='w')
+    block_list, block_count = get_unique_block_count(filename=filename)
+    temp_dict = {
+        "block_list": block_list,
+        "block_count": block_count
+    }
+    temp_anything_list.append(temp_dict)
+    logging.info("Writing info {} to json file".format(filename))
+    json.dump(obj=temp_anything_list, fp=json_fp)
     return 1
 
 
@@ -348,7 +371,8 @@ def run_feature_engineering():
         # read_write_block_count(filename=file_)
         # workload_metadata_list(filename=file_)
         # workload_metadata_rw_list(filename=file_)
-        block_length_list(filename=file_)
+        # block_length_list(filename=file_)
+        unique_block_length_list(filename=file_)
         end_time = time.time()
         k = end_time - start_time
         logging.info("The time taken to execute {} is {}".format(file_, k))

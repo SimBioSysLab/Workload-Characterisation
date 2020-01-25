@@ -78,6 +78,15 @@ def ret_block_len_stats(filename):
     return read_write_json_file_path, actual_name
 
 
+def ret_unique_block_count_path(filename):
+
+    actual_name = filename.split("/")[-1]
+    actual_name = actual_name.split(".")[0]
+
+    read_write_json_file_path = "./{}/unique_workload_count.json".format(config.config_["RESULTS_FOLDER"])
+    return read_write_json_file_path, actual_name
+
+
 def ret_server_result_json():
 
     actual_path = "./{}/server_data/server_result.json".format(config.config_["RESULTS_FOLDER"])
@@ -114,3 +123,23 @@ def return_block_rw_ia_json(filename):
 
     actual_path = "./{}/block_rwia/{}.json".format(config.config_["RESULTS_FOLDER"], actual_name)
     return actual_path, actual_name
+
+
+def block_result_path():
+    read_write_json_file_path = "./{}/server_data/workload_block_result.json".format(config.config_["RESULTS_FOLDER"])
+    return read_write_json_file_path
+
+
+def workload_rw_path():
+    read_write_json_file_path = "./{}/server_data/workload_rw_result.json".format(config.config_["RESULTS_FOLDER"])
+    return read_write_json_file_path
+
+
+def workload_iat_path():
+    read_write_json_file_path = "./{}/server_data/workload_result.json".format(config.config_["RESULTS_FOLDER"])
+    return read_write_json_file_path
+
+
+def df_dataset_path():
+    read_write_json_file_path = "./{}/combined_workload.csv".format(config.config_["RESULTS_FOLDER"])
+    return read_write_json_file_path

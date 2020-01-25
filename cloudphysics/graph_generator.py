@@ -38,7 +38,7 @@ def generate_iatime_histogram(filename):
     opfilename, actual_name = return_iat_graph_path(filename=filename)
     i = 1
     for row in dataset:
-        if i % 100000:
+        if i % 100000 == 0:
             logging.info("Finished adding {} records into list".format(i))
         list_of_iat.append(float(row["INTERARRIVAL"]))
         i = i + 1
@@ -53,11 +53,11 @@ def generate_iatime_histogram(filename):
 
 
 def run_generate_graphs():
-    # generate_read_write_graph()
-    all_files_list = ret_all_csv_trace_files()
-    for file_ in all_files_list:
-        st_time = time.time()
-        generate_iatime_histogram(filename=file_)
-        end_time = time.time()
-        time_ = end_time - st_time
-        logging.info("Time taken for completing {} is {}".format(time, time_))
+    generate_read_write_graph()
+    # all_files_list = ret_all_csv_trace_files()
+    # for file_ in all_files_list:
+    #     st_time = time.time()
+    #     generate_iatime_histogram(filename=file_)
+    #     end_time = time.time()
+    #     time_ = end_time - st_time
+    #     logging.info("Time taken for completing {} is {}".format(time, time_))

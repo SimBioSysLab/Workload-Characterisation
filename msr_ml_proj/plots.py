@@ -49,6 +49,10 @@ def size_hist_plot(size_dataset, plot_title):
     logging.info("Saved Size Histogram {}".format(graph_path))
 
 
+def unique_block_access_histogram():
+    title = "Unique Workload Access Histogram"
+
+
 def run():
     all_files_list = get_all_cleaned_files()
     for file_ in all_files_list:

@@ -340,9 +340,11 @@ def block_length_list(filename):
 def get_unique_block_count(filename):
     logging.info("Starting unique block count of file {}".format(filename))
     dataset = pd.read_csv(filename)
-    unique_block_lists = dataset.BLOCK_NUMBER.unique().tolist()
-    unique_block_count = dataset.BLOCK_NUMBER.nunique()
-
+    new_df = pd.DataFrame(dataset["BLOCK_NUMBER"], columns=["BLOCK_NUMBER"])
+    del dataset
+    unique_block_lists = new_df.BLOCK_NUMBER.unique().tolist()
+    unique_block_count = new_df.BLOCK_NUMBER.nunique()
+    del new_df
     return unique_block_lists, unique_block_count
 
 

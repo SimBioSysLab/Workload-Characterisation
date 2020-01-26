@@ -10,7 +10,8 @@ import plotly.graph_objects as go
 import numpy
 
 import matplotlib.pyplot as plt
-from cloudphysics.utils import ret_server_result_json, return_iat_graph_path, ret_all_csv_trace_files
+from cloudphysics.utils import ret_server_result_json, return_iat_graph_path, ret_all_csv_trace_files, \
+    workload_unique_block_path
 
 
 def generate_read_write_graph():
@@ -52,8 +53,16 @@ def generate_iatime_histogram(filename):
     plt.show()
 
 
+def generate_unique_block_count_histogram():
+    logging.info("Starting unique block count of file")
+    json_fd = open(workload_unique_block_path(), "r")
+    dataset = json.load(json_fd)
+    print(dataset)
+
+
 def run_generate_graphs():
-    generate_read_write_graph()
+    # generate_read_write_graph()
+    generate_unique_block_count_histogram()
     # all_files_list = ret_all_csv_trace_files()
     # for file_ in all_files_list:
     #     st_time = time.time()

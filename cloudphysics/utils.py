@@ -142,7 +142,7 @@ def workload_iat_path():
 
 def workload_unique_block_path():
 
-    read_write_json_file_path = "./{}/server_data/unique_workload_count.json".format(config.config_["RESULTS_FOLDER"])
+    read_write_json_file_path = "./{}/server_data/unique_workload_count_1.json".format(config.config_["RESULTS_FOLDER"])
     return read_write_json_file_path
 
 

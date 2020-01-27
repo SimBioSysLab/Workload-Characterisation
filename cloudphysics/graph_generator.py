@@ -57,7 +57,9 @@ def generate_unique_block_count_histogram():
     logging.info("Starting unique block count of file")
     json_fd = open(workload_unique_block_path(), "r")
     dataset = json.load(json_fd)
-    print(dataset)
+
+    for values in dataset:
+        print(values["block_count"])
 
 
 def run_generate_graphs():

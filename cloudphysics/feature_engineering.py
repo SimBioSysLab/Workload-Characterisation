@@ -342,18 +342,16 @@ def get_unique_block_count(filename):
     dataset = pd.read_csv(filename)
     new_df = pd.DataFrame(dataset["BLOCK_NUMBER"], columns=["BLOCK_NUMBER"])
     del dataset
-    unique_block_lists = new_df.BLOCK_NUMBER.unique().tolist()
     unique_block_count = new_df.BLOCK_NUMBER.nunique()
     del new_df
-    return unique_block_lists, unique_block_count
+    return unique_block_count
 
 
 def unique_block_length_list(filename):
     write_to_file, json_value = ret_unique_block_count_path(filename=filename)
     json_fp = open(file=write_to_file, mode='w')
-    block_list, block_count = get_unique_block_count(filename=filename)
+    block_count = get_unique_block_count(filename=filename)
     temp_dict = {
-        "block_list": block_list,
         "block_count": block_count
     }
     temp_anything_list.append(temp_dict)

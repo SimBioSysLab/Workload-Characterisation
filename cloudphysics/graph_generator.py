@@ -2,6 +2,7 @@ import matplotlib
 
 matplotlib.use('TkAgg')
 import json
+import numpy as np
 import logging
 import time
 import csv
@@ -58,8 +59,17 @@ def generate_unique_block_count_histogram():
     json_fd = open(workload_unique_block_path(), "r")
     dataset = json.load(json_fd)
 
+    block_count_list = []
     for values in dataset:
-        print(values["block_count"])
+        block_count_list.append(values["block_count"])
+    block_count_list = sorted(block_count_list)
+    bars = np.arange(len(block_count_list))
+    label_text = "Block count LOG SCALE"
+    plt.figure(figsize=(15, 10))
+    plt.title(label_text)
+    plt.yscale("log")
+    plt.bar(bars, block_count_list)
+    plt.show()
 
 
 def run_generate_graphs():

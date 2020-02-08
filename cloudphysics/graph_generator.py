@@ -59,14 +59,20 @@ def generate_unique_block_count_histogram():
     json_fd = open(workload_unique_block_path(), "r")
     dataset = json.load(json_fd)
 
+    sorted_list = sorted(dataset, key=lambda k: k["block_count"], reverse=True)
     block_count_list = []
-    for values in dataset:
-        block_count_list.append(values["block_count"])
+    files_names = []
+    for values in sorted_list:
+        block_count_list.append(values["block_count"] / values["total_block_count"])
+        files_names.append(values['filename'])
+
     block_count_list = sorted(block_count_list)
-    bars = np.arange(len(block_count_list))
+    bars = np.arange(len(files_names))
+
     label_text = "Block count LOG SCALE"
     plt.figure(figsize=(15, 10))
     plt.title(label_text)
+    plt.xticks(bars, files_names, rotation=90)
     plt.yscale("log")
     plt.bar(bars, block_count_list)
     plt.show()

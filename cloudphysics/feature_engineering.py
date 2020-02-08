@@ -8,7 +8,7 @@ import pandas as pd
 from loadconfig import config
 from cloudphysics.utils import ret_all_csv_trace_files, ret_file_name_modified_file, ret_read_write_json_path, \
     return_rw_ia_json, return_block_rw_ia_json, ret_workload_metadata_path, ret_workload_rw_metadata_path, \
-    ret_block_len_stats, ret_unique_block_count_path
+    ret_block_len_stats, ret_unique_block_count_path, ret_rw_unique_block_count
 
 
 temp_anything_list = []
@@ -363,6 +363,42 @@ def unique_block_length_list(filename):
     return 1
 
 
+def unique_read_write_block_count(filename):
+    logging.info("Starting read write unique block count of {}".format(filename))
+    dataset = pd.read_csv(filename)
+    read_mask = (dataset['BIN_OPCODE'] == 0)
+    write_mask = (dataset['BIN_OPCODE'] == 1)
+    read_df = dataset[read_mask]['BLOCK_NUMBER']
+    write_df = dataset[write_mask]["BLOCK_NUMBER"]
+    del dataset
+
+    read_count = read_df.nunique()
+    read_total = len(read_df.index)
+    write_count = write_df.nunique()
+    write_total = len(write_df.index)
+
+    del read_df
+    del write_df
+
+    return read_count, read_total, write_count, write_total
+
+
+def unique_read_write_block_list(filename):
+    write_to_file, json_value = ret_rw_unique_block_count(filename=filename)
+    json_fp = open(file=write_to_file, mode='w')
+    read_block_count, read_total_block, write_block_count, write_total_block = \
+        unique_read_write_block_count(filename=filename)
+    temp_dict = {
+        "read_unique_count": read_block_count,
+        "read_total_count": read_total_block,
+        "write_unqiue_count": write_block_count,
+        "write_total_count": write_total_block
+    }
+    temp_anything_list.append(temp_dict)
+    json.dump(obj=temp_anything_list, fp=json_fp)
+    return 1
+
+
 def run_feature_engineering():
     all_files_list = ret_all_csv_trace_files()
     for file_ in all_files_list:
@@ -375,7 +411,8 @@ def run_feature_engineering():
         # workload_metadata_list(filename=file_)
         # workload_metadata_rw_list(filename=file_)
         # block_length_list(filename=file_)
-        unique_block_length_list(filename=file_)
+        # unique_block_length_list(filename=file_)
+        unique_read_write_block_list(filename=file_)
         end_time = time.time()
         k = end_time - start_time
         logging.info("The time taken to execute {} is {}".format(file_, k))

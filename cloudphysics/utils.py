@@ -87,6 +87,15 @@ def ret_unique_block_count_path(filename):
     return read_write_json_file_path, actual_name
 
 
+def ret_rw_unique_block_count(filename):
+
+    actual_name = filename.split("/")[-1]
+    actual_name = actual_name.split(".")[0]
+
+    read_write_json_file_path = "./{}/read_write_unique_workload.json".format(config.config_["RESULTS_FOLDER"])
+    return read_write_json_file_path, actual_name
+
+
 def ret_server_result_json():
 
     actual_path = "./{}/server_data/server_result.json".format(config.config_["RESULTS_FOLDER"])

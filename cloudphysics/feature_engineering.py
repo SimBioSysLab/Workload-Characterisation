@@ -406,7 +406,7 @@ def get_hrc_for_file(file_name, algorithm_name):
     logging.info("Working on file: {} and algorithm: {}".format(file_name, algorithm_name))
     actual_name = file_name.split("/")[-1]
     actual_name = actual_name.split(".")[0]
-    cache_size = 500000
+    cache_size = 6000000
     c = Cachecow()
     if "vscsi1" in file_name:
         trace_type = 1
@@ -414,7 +414,7 @@ def get_hrc_for_file(file_name, algorithm_name):
         trace_type = 2
 
     c.vscsi(file_name, vscsi_type=trace_type)
-    dict_value = c.get_hit_ratio_dict(algorithm_name, cache_size=cache_size, cache_params=None, bin_size=-1)
+    dict_value = c.plotHRCs(algorithm_name, cache_size=cache_size, cache_params=None, bin_size=-1)
     json_file_name = get_hit_ratio_filename(actual_name, algorithm_name)
     json_fp = open(json_file_name, "w")
     json.dump(obj=dict_value, fp=json_fp)
@@ -424,7 +424,7 @@ def get_all_cp_trace_files():
 
     c = Cachecow()
     all_files_list = read_all_cp_trace_files()
-    algorithm_list = ["LRU", "LFU", "FIFO", "MRU"]
+    algorithm_list = ["LRU", "LFU", "FIFO", "MRU", "Optimal"]
     for file_ in all_files_list:
         for algo in algorithm_list:
             start_time = time.time()
@@ -432,6 +432,7 @@ def get_all_cp_trace_files():
             end_time = time.time()
             k = end_time - start_time
             logging.info("Finished File: {} and Algo: {} in {}".format(file_, algo, k))
+
 
 def run_feature_engineering():
     # all_files_list = ret_all_csv_trace_files()

@@ -158,3 +158,8 @@ def workload_unique_block_path():
 def df_dataset_path():
     read_write_json_file_path = "./{}/combined_workload.csv".format(config.config_["RESULTS_FOLDER"])
     return read_write_json_file_path
+
+
+def get_hit_ratio_filename(file_, algorithm_name):
+    json_file_name = "./{}/hit_ratio/{}_{}_.json".format(config.config_["RESULTS_FOLDER"], file_, algorithm_name)
+    return json_file_name

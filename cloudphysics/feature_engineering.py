@@ -413,8 +413,9 @@ def get_hrc_for_file(file_name, algorithm_name):
     else:
         trace_type = 2
 
-    c.vscsi(file_name, vscsi_type=trace_type)
-    dict_value = c.plotHRCs(algorithm_name, cache_size=cache_size, cache_params=None, bin_size=-1)
+    reader = c.vscsi(file_name, vscsi_type=trace_type)
+    trace_length = reader.get_num_of_uniq_req()
+    dict_value = c.get_hit_ratio_dict(algorithm_name, cache_size=trace_length, cache_params=None, bin_size=-1)
     json_file_name = get_hit_ratio_filename(actual_name, algorithm_name)
     json_fp = open(json_file_name, "w")
     json.dump(obj=dict_value, fp=json_fp)

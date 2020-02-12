@@ -8,8 +8,10 @@ import pandas as pd
 from loadconfig import config
 from cloudphysics.utils import ret_all_csv_trace_files, ret_file_name_modified_file, ret_read_write_json_path, \
     return_rw_ia_json, return_block_rw_ia_json, ret_workload_metadata_path, ret_workload_rw_metadata_path, \
-    ret_block_len_stats, ret_unique_block_count_path, ret_rw_unique_block_count
+    ret_block_len_stats, ret_unique_block_count_path, ret_rw_unique_block_count, read_all_cp_trace_files, \
+    ret_file_name_csv, get_hit_ratio_filename
 
+from PyMimircache import Cachecow
 
 temp_anything_list = []
 
@@ -399,20 +401,51 @@ def unique_read_write_block_list(filename):
     return 1
 
 
-def run_feature_engineering():
-    all_files_list = ret_all_csv_trace_files()
+def get_hrc_for_file(file_name, algorithm_name):
+
+    print("Working on file: {} and algorithm: {}".format(file_name, algorithm_name))
+    actual_name = file_name.split("/")[-1]
+    actual_name = actual_name.split(".")[0]
+
+    c = Cachecow()
+    if "vscsi1" in file_name:
+        trace_type = 1
+    else:
+        trace_type = 2
+
+    c.vscsi(file_name, vscsi_type=trace_type)
+    dict_value = c.get_hit_ratio_dict(algorithm_name, cache_size=-1, cache_params=None, bin_size=-1)
+    json_file_name = get_hit_ratio_filename(actual_name, algorithm_name)
+    json_fp = open(json_file_name, "w")
+    json.dump(obj=dict_value, fp=json_fp)
+
+
+def get_all_cp_trace_files():
+
+    c = Cachecow()
+    all_files_list = read_all_cp_trace_files()
+    algorithm_list = ["LRU", "LFU", "FIFO", "Optimal", "clock", "MRU"]
+
     for file_ in all_files_list:
-        start_time = time.time()
-        # convert_to_opcodes(filename=file_)
-        # read_write_list(filename=file_)
-        # generate_inter_arrival_times(filename=file_)
-        # generate_rw_ia_times(filename=file_)
-        # read_write_block_count(filename=file_)
-        # workload_metadata_list(filename=file_)
-        # workload_metadata_rw_list(filename=file_)
-        # block_length_list(filename=file_)
-        # unique_block_length_list(filename=file_)
-        unique_read_write_block_list(filename=file_)
-        end_time = time.time()
-        k = end_time - start_time
-        logging.info("The time taken to execute {} is {}".format(file_, k))
+        for algo in algorithm_list:
+            get_hrc_for_file(file_name=file_, algorithm_name=algo)
+
+
+def run_feature_engineering():
+    # all_files_list = ret_all_csv_trace_files()
+    get_all_cp_trace_files()
+    # for file_ in all_files_list:
+    #     start_time = time.time()
+    #     # convert_to_opcodes(filename=file_)
+    #     # read_write_list(filename=file_)
+    #     # generate_inter_arrival_times(filename=file_)
+    #     # generate_rw_ia_times(filename=file_)
+    #     # read_write_block_count(filename=file_)
+    #     # workload_metadata_list(filename=file_)
+    #     # workload_metadata_rw_list(filename=file_)
+    #     # block_length_list(filename=file_)
+    #     # unique_block_length_list(filename=file_)
+    #     unique_read_write_block_list(filename=file_)
+    #     end_time = time.time()
+    #     k = end_time - start_time
+    #     logging.info("The time taken to execute {} is {}".format(file_, k))

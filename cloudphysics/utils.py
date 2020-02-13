@@ -162,4 +162,7 @@ def df_dataset_path():
 
 def get_hit_ratio_filename(file_, algorithm_name):
     json_file_name = "./{}/hit_ratio/{}_{}_.json".format(config.config_["RESULTS_FOLDER"], file_, algorithm_name)
+    result = os.path.exists(json_file_name)
+    if result:
+        return False
     return json_file_name

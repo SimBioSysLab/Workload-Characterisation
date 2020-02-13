@@ -406,7 +406,10 @@ def get_hrc_for_file(file_name, algorithm_name):
     logging.info("Working on file: {} and algorithm: {}".format(file_name, algorithm_name))
     actual_name = file_name.split("/")[-1]
     actual_name = actual_name.split(".")[0]
-    cache_size = 6000000
+    json_file_name = get_hit_ratio_filename(actual_name, algorithm_name)
+    if not json_file_name:
+        logging.info("File {} alread has algo {}".format(file_name, algorithm_name))
+        return 1
     c = Cachecow()
     if "vscsi1" in file_name:
         trace_type = 1
@@ -415,10 +418,11 @@ def get_hrc_for_file(file_name, algorithm_name):
 
     reader = c.vscsi(file_name, vscsi_type=trace_type)
     trace_length = reader.get_num_of_uniq_req()
+    del reader
     dict_value = c.get_hit_ratio_dict(algorithm_name, cache_size=trace_length, cache_params=None, bin_size=-1)
-    json_file_name = get_hit_ratio_filename(actual_name, algorithm_name)
     json_fp = open(json_file_name, "w")
     json.dump(obj=dict_value, fp=json_fp)
+    del dict_value
 
 
 def get_all_cp_trace_files():
@@ -426,7 +430,6 @@ def get_all_cp_trace_files():
     all_files_list = sorted(read_all_cp_trace_files())
     all_files_list.reverse()
     print(all_files_list)
-    exit()
     algorithm_list = ["LRU", "LFU", "FIFO", "MRU", "Optimal"]
     for file_ in all_files_list:
         for algo in algorithm_list:

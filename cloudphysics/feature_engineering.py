@@ -430,7 +430,7 @@ def get_all_cp_trace_files():
     all_files_list = sorted(read_all_cp_trace_files())
     all_files_list.reverse()
     print(all_files_list)
-    algorithm_list = ["LRU", "LFU", "FIFO", "MRU", "Optimal"]
+    algorithm_list = ["ARC"]
     for file_ in all_files_list:
         for algo in algorithm_list:
             start_time = time.time()

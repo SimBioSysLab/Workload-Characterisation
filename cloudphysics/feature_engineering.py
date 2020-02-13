@@ -423,8 +423,10 @@ def get_hrc_for_file(file_name, algorithm_name):
 
 def get_all_cp_trace_files():
 
-    c = Cachecow()
-    all_files_list = read_all_cp_trace_files()
+    all_files_list = sorted(read_all_cp_trace_files())
+    all_files_list.reverse()
+    print(all_files_list)
+    exit()
     algorithm_list = ["LRU", "LFU", "FIFO", "MRU", "Optimal"]
     for file_ in all_files_list:
         for algo in algorithm_list:

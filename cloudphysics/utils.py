@@ -162,6 +162,12 @@ def workload_unique_block_path():
     return read_write_json_file_path
 
 
+def workload_unique_block_non_server():
+
+    read_write_json_file_path = "./{}/unique_workload_count_1.json".format(config.config_["RESULTS_FOLDER"])
+    return read_write_json_file_path
+
+
 def df_dataset_path():
     read_write_json_file_path = "./{}/combined_workload.csv".format(config.config_["RESULTS_FOLDER"])
     return read_write_json_file_path

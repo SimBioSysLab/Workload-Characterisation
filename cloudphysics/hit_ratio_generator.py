@@ -2,7 +2,7 @@ import logging
 import json
 import pandas as pd
 from cloudphysics.utils import workload_unique_block_non_server, get_hit_ratio, bucket_json_path, \
-    server_bucketed_json_path
+    server_bucketed_json_path, broken_hrs_to_csv
 from cloudphysics.read_vscsi import get_all_file_names
 import bisect
 
@@ -74,9 +74,28 @@ def get_hit_probability_ratio():
 
     json_fd = open(server_bucketed_json_path())
     dataset = json.load(json_fd)
-    print(dataset[0]["algo_file_name"])
+    broken_values_list = []
+    for data in dataset:
+        val = data["algo_file_name"].split("/")[3]
+        val = val.split('.')[0]
+        val_broken = val.split("_")
+        algo = val_broken[2]
+        file_name = "{}_{}".format(val_broken[0], val_broken[1])
+        for value in data['hit_rate_tuple']:
+            block_percent = value[0] * 10
+            hr_value = value[2]
+            temp_dict = {
+                "algo": algo,
+                "file": file_name,
+                "block_percent": block_percent,
+                "hr_value": hr_value
+            }
+            broken_values_list.append(temp_dict)
+
+    answer_df = pd.DataFrame(broken_values_list)
+    answer_df.to_csv(broken_hrs_to_csv(), index=False)
 
 
 def run_hr_gen():
-    # calculate_file_individual()
-    get_hit_probability_ratio()
+    calculate_file_individual()
+    # get_hit_probability_ratio()

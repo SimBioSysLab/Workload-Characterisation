@@ -17,6 +17,13 @@ def ret_file_name_csv(filename):
     return file_location
 
 
+def get_split_file_name(filename):
+    actual_name = filename.split("/")[-1]
+    actual_name = actual_name.split(".")[0]
+
+    return actual_name
+
+
 def ret_all_csv_trace_files():
 
     init_path = "./{}/cloudphysics/csv/generated/".format(config.config_["DATASET_FOLDER"])
@@ -166,3 +173,11 @@ def get_hit_ratio_filename(file_, algorithm_name):
     if result:
         return False
     return json_file_name
+
+
+def get_hit_ratio(file_, algorithm_name):
+    json_file_name = "./{}/hit_ratio/{}_{}_.json".format(config.config_["RESULTS_FOLDER"], file_, algorithm_name)
+    result = os.path.exists(json_file_name)
+    if result:
+        return json_file_name
+    return False

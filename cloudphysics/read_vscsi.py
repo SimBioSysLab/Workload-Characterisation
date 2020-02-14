@@ -3,7 +3,7 @@ import time
 import csv
 from PyMimircache import Cachecow
 
-from cloudphysics.utils import read_all_cp_trace_files, ret_file_name_csv
+from cloudphysics.utils import read_all_cp_trace_files, ret_file_name_csv, get_split_file_name
 from loadconfig import config
 import logging
 
@@ -82,6 +82,17 @@ def convert_to_csv(file_name):
             i = i + 1
 
     return 1
+
+
+def get_all_file_names():
+    logging.info("Getting all filenames")
+    files_list = read_all_cp_trace_files()
+    file_prefix_list = []
+    for file_ in files_list:
+        temp_fname = get_split_file_name(file_)
+        file_prefix_list.append(temp_fname)
+    logging.info("Returning file names")
+    return file_prefix_list
 
 
 def run_reading():

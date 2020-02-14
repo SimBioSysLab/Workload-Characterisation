@@ -197,3 +197,8 @@ def bucket_json_path():
 def server_bucketed_json_path():
     server_bucketed = "./{}/server_data/bucketed_hit_rate.json".format(config.config_["RESULTS_FOLDER"])
     return server_bucketed
+
+
+def broken_hrs_to_csv():
+    broken_hrs = "./{}/broken_hrs.csv".format(config.config_["RESULTS_FOLDER"])
+    return broken_hrs

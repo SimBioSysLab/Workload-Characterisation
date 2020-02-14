@@ -7,6 +7,7 @@ from cloudphysics.feature_engineering import run_feature_engineering
 from cloudphysics.graph_generator import run_generate_graphs
 from cloudphysics.combiner import run_combiner
 from cloudphysics.model import run_model
+from cloudphysics.hit_ratio_generator import run_hr_gen
 
 
 def load_configuration(dataset):
@@ -29,6 +30,7 @@ def run_cp_traces():
     # run_generate_graphs()
     # run_combiner()
     # run_model()
+    # run_hr_gen()
     end_time = time.time()
     time_ = end_time - st_time
     logging.info("Total running time is : {}".format(time_))

@@ -181,3 +181,8 @@ def get_hit_ratio(file_, algorithm_name):
     if result:
         return json_file_name
     return False
+
+
+def bucket_json_path():
+    read_write_json_file_path = "./{}/bucketed_hit_rate.json".format(config.config_["RESULTS_FOLDER"])
+    return read_write_json_file_path

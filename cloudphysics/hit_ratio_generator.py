@@ -31,6 +31,7 @@ def calculate_file_individual():
             file_algo_list.append((file_name, unique_count))
 
     for algo_file_name, count in file_algo_list:
+
         # print(algo_file_name)
         algo_ = algo_file_name.split("_")[-2]
         print(algo_)
@@ -46,6 +47,7 @@ def calculate_file_individual():
         # print(dataset)
         temp_hit_rate_list = []
         for row, keys in enumerate(key_list):
+            logging.info("Parsing file {} and algo {} for idx {}".format(algo_file_name, algo_, idx_value))
             # print(row, keys)
             if count_value > keys:
                 continue

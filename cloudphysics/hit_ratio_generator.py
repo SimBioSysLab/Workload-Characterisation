@@ -1,7 +1,7 @@
 import logging
 import json
 import pandas as pd
-from cloudphysics.utils import workload_unique_block_path, get_hit_ratio, bucket_json_path
+from cloudphysics.utils import workload_unique_block_non_server, get_hit_ratio, bucket_json_path
 from cloudphysics.read_vscsi import get_all_file_names
 import bisect
 
@@ -11,7 +11,7 @@ count_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 
 def get_unique_block():
     logging.info("Getting unique block counts")
-    json_dataset = pd.read_json(workload_unique_block_path())
+    json_dataset = pd.read_json(workload_unique_block_non_server())
     json_dataset.set_index("filename", inplace=True)
     return json_dataset
 
@@ -20,7 +20,6 @@ def calculate_file_individual():
     files_names_list = get_all_file_names()
     unique_block_json = get_unique_block()
     file_algo_list = []
-    files_names_list = ['w98_vscsi1']
     full_functions_list = []
     for file_ in files_names_list:
         for algo in algorithm_list:

@@ -86,7 +86,7 @@ def convert_to_csv(file_name):
 
 def get_all_file_names():
     logging.info("Getting all filenames")
-    files_list = ret_all_csv_trace_files()
+    files_list = read_all_cp_trace_files()
     file_prefix_list = []
     for file_ in files_list:
         temp_fname = get_split_file_name(file_)

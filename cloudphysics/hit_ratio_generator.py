@@ -1,7 +1,8 @@
 import logging
 import json
 import pandas as pd
-from cloudphysics.utils import workload_unique_block_non_server, get_hit_ratio, bucket_json_path
+from cloudphysics.utils import workload_unique_block_non_server, get_hit_ratio, bucket_json_path, \
+    server_bucketed_json_path
 from cloudphysics.read_vscsi import get_all_file_names
 import bisect
 
@@ -69,6 +70,13 @@ def calculate_file_individual():
     json.dump(obj=full_functions_list, fp=json_fd)
 
 
+def get_hit_probability_ratio():
+
+    json_fd = open(server_bucketed_json_path())
+    dataset = json.load(json_fd)
+    print(dataset[0]["algo_file_name"])
+
 
 def run_hr_gen():
-    calculate_file_individual()
+    # calculate_file_individual()
+    get_hit_probability_ratio()

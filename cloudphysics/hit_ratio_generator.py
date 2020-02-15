@@ -4,6 +4,7 @@ import pandas as pd
 from cloudphysics.utils import workload_unique_block_non_server, get_hit_ratio, bucket_json_path, \
     server_bucketed_json_path, broken_hrs_to_csv
 from cloudphysics.read_vscsi import get_all_file_names
+import itertools
 import bisect
 
 algorithm_list = ["LRU", "FIFO", "LFU", "ARC", "MRU", "Optimal"]
@@ -96,6 +97,24 @@ def get_hit_probability_ratio():
     answer_df.to_csv(broken_hrs_to_csv(), index=False)
 
 
+def get_hit_rate_table():
+    dataset = pd.read_csv(broken_hrs_to_csv())
+    replacement_policies = dataset.algo.unique()
+    percentages = [x * 100 for x in count_list]
+    file_list = dataset.file.unique()
+    combination_list = []
+    for algo in replacement_policies:
+        for percent in percentages:
+            combination_list.append((algo, percent))
+    print(combination_list)
+
+    for file_ in file_list:
+        mask = (dataset["file"] == file_)
+        masked_1 = dataset[mask]
+        print(masked_1)
+
+
 def run_hr_gen():
-    calculate_file_individual()
+    # calculate_file_individual()
     # get_hit_probability_ratio()
+    get_hit_rate_table()

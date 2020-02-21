@@ -26,8 +26,8 @@ def load_configuration(dataset):
 def run_cp_traces():
     st_time = time.time()
     # run_reading()
-    run_feature_engineering()
-    # run_generate_graphs()
+    # run_feature_engineering()
+    run_generate_graphs()
     # run_combiner()
     # run_model()
     # run_hr_gen()

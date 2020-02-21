@@ -6,8 +6,6 @@ import numpy as np
 import logging
 import time
 import csv
-import plotly.express as px
-import plotly.graph_objects as go
 import numpy
 
 import matplotlib.pyplot as plt
@@ -46,11 +44,11 @@ def generate_iatime_histogram(filename):
         i = i + 1
 
     label_text = "Interarrival time of {} [LOG SCALE]".format(actual_name)
-    plt.figure(figsize=(15, 10))
+    plt.figure(figsize=(30, 20))
     plt.title(label_text)
     plt.yscale("log")
     plt.hist(list_of_iat)
-    plt.savefig(opfilename, format="eps", dpi=10000)
+    plt.savefig(opfilename, format="pdf")
     plt.show()
 
 
@@ -80,11 +78,11 @@ def generate_unique_block_count_histogram():
 
 def run_generate_graphs():
     # generate_read_write_graph()
-    generate_unique_block_count_histogram()
-    # all_files_list = ret_all_csv_trace_files()
-    # for file_ in all_files_list:
-    #     st_time = time.time()
-    #     generate_iatime_histogram(filename=file_)
-    #     end_time = time.time()
-    #     time_ = end_time - st_time
-    #     logging.info("Time taken for completing {} is {}".format(time, time_))
+    # generate_unique_block_count_histogram()
+    all_files_list = ret_all_csv_trace_files()
+    for file_ in all_files_list:
+        st_time = time.time()
+        generate_iatime_histogram(filename=file_)
+        end_time = time.time()
+        time_ = end_time - st_time
+        logging.info("Time taken for completing {} is {}".format(time, time_))

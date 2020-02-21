@@ -2,7 +2,7 @@ import logging
 import json
 import pandas as pd
 from cloudphysics.utils import workload_unique_block_non_server, get_hit_ratio, bucket_json_path, \
-    server_bucketed_json_path, broken_hrs_to_csv
+    server_bucketed_json_path, broken_hrs_to_csv, ranked_result
 from cloudphysics.read_vscsi import get_all_file_names
 import itertools
 import bisect
@@ -108,10 +108,26 @@ def get_hit_rate_table():
             combination_list.append((algo, percent))
     print(combination_list)
 
+    result_list = []
     for file_ in file_list:
-        mask = (dataset["file"] == file_)
+        mask = (dataset["file"] == file_) & (dataset["algo"] != "Optimal")
         masked_1 = dataset[mask]
-        print(masked_1)
+        for combination in combination_list:
+            mask_1 = (masked_1["block_percent"] == combination[1])
+            masked_2 = masked_1[mask_1]
+            actual_row = masked_2[masked_2.hr_value == masked_2.hr_value.max()]
+            temp_dict = {
+                "algo": actual_row["algo"].values[0],
+                "file": actual_row["file"].values[0],
+                "hr_value": actual_row["hr_value"].values[0],
+                "block_percent": actual_row["block_percent"].values[0]
+            }
+            result_list.append(temp_dict)
+
+    output_file = ranked_result()
+    dataset_ = pd.DataFrame(result_list)
+    dataset_ = dataset_.drop_duplicates()
+    dataset_.to_csv(output_file, index=False)
 
 
 def run_hr_gen():

@@ -44,8 +44,8 @@ def run_cp_traces():
 def run_msr_traces():
     st_time = time.time()
     # cleaning_run()
-    feature_run()
-    # plot_run()
+    # feature_run()
+    plot_run()
     end_time = time.time()
     time_ = end_time - st_time
     logging.info("Total running time is : {}".format(time_))

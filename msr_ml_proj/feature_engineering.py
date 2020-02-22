@@ -73,8 +73,9 @@ def run():
         # convert_hostname_to_number(file_name=file_)
         derive_interarrival_times(file_name=file_)
         en_time = time.time()
-        k = st_time - en_time
+        k = en_time - st_time
         logging.info("The time taken for file {} is {} seconds".format(file_, k))
+
 
 if __name__ == "__main__":
     run()

@@ -5,7 +5,7 @@ import pandas as pd
 
 
 from loadconfig import config
-from utils import get_all_cleaned_files
+from msr_ml_proj.utils import get_all_cleaned_files, get_writing_file_name
 
 
 def derive_interarrival_times(file_name):

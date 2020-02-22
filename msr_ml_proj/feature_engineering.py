@@ -1,6 +1,6 @@
 import logging
 import arrow
-
+import time
 import pandas as pd
 
 
@@ -65,12 +65,16 @@ def extract_project_dataset():
 def run():
     logging.info(msg="Logging Feature Engineering.")
     cleaned_files_path = get_all_cleaned_files()
-    extract_project_dataset()
-    # for file_ in cleaned_files_path:
-    #     logging.info("Starting Conversion for {}".format(file_))
-    #     convert_hostname_to_number(file_name=file_)
-    #     derive_interarrival_times(file_name=file_)
-
+    # extract_project_dataset()
+    for file_ in cleaned_files_path:
+        print(file_)
+        st_time = time.time()
+        logging.info("Starting Conversion for {}".format(file_))
+        # convert_hostname_to_number(file_name=file_)
+        derive_interarrival_times(file_name=file_)
+        en_time = time.time()
+        k = st_time - en_time
+        logging.info("The time taken for file {} is {} seconds".format(file_, k))
 
 if __name__ == "__main__":
     run()

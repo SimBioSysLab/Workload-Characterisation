@@ -9,8 +9,9 @@ from cloudphysics.combiner import run_combiner
 from cloudphysics.model import run_model
 from cloudphysics.hit_ratio_generator import run_hr_gen
 
-
 from msr_ml_proj.cleaning import run as cleaning_run
+from msr_ml_proj.plots import run as plot_run
+from msr_ml_proj.feature_engineering import run as feature_run
 
 
 def load_configuration(dataset):
@@ -42,7 +43,9 @@ def run_cp_traces():
 
 def run_msr_traces():
     st_time = time.time()
-    cleaning_run()
+    # cleaning_run()
+    feature_run()
+    # plot_run()
     end_time = time.time()
     time_ = end_time - st_time
     logging.info("Total running time is : {}".format(time_))

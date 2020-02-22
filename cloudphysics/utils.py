@@ -121,7 +121,7 @@ def return_iat_graph_path(filename):
     actual_name = filename.split("/")[-1]
     actual_name = actual_name.split(".")[0]
 
-    actual_path = "./{}/iat/{}.eps".format(config.config_["GRAPH_FOLDER"], actual_name)
+    actual_path = "./{}/iat/{}.png".format(config.config_["GRAPH_FOLDER"], actual_name)
     return actual_path, actual_name
 
 

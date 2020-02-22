@@ -11,7 +11,7 @@ def get_cleaned_files_path(file_name):
 
 
 def get_all_cleaned_files():
-    all_files_list = glob.glob("./{}/cleaned_dataset/*.csv".format(config.config_["DATASET_FOLDER"]))
+    all_files_list = glob.glob("./{}/msr_traces/cleaned_dataset/*.csv".format(config.config_["DATASET_FOLDER"]))
     return all_files_list
 
 

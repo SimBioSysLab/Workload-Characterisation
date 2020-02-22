@@ -10,7 +10,7 @@ from loadconfig import config
 def interarrival_hist_plot(in_ar_ti, plot_title):
     title = "Histogram for {}".format(plot_title)
     plot_title = plot_title + "hist.png"
-    graph_path = "./{}/{}".format(config.config_["GRAPH_FOLDER"], plot_title)
+    graph_path = "../{}/msr_traces/{}".format(config.config_["GRAPH_FOLDER"], plot_title)
 
     dataframe = pd.DataFrame(columns=["InterarrivalTime"])
     dataframe["InterarrivalTime"] = in_ar_ti["InterarrivalTime"]
@@ -21,6 +21,12 @@ def interarrival_hist_plot(in_ar_ti, plot_title):
     logging.info("For file {}, Max value is {}, Min value is {}".format(plot_title, max_, min_))
 
     dataframe.plot.hist(alpha=0.5, bins=15, grid=True, legend=None, log=True)
+    plt.figure(figsize=(15, 10))
+    font = {'family': 'normal',
+            'size': 20}
+    plt.rc('font', **font)
+    plt.rc('xtick', labelsize=20)
+    plt.rc('ytick', labelsize=20)
     plt.xlabel("Interarrival Times [LOG SCALE]")
     plt.title(title)
     plt.savefig(graph_path)
@@ -60,8 +66,8 @@ def run():
         file_name = file_.split("/")[-1]
         file_name = file_name.split(".")[0]
         data_frame = pd.read_csv(file_)
-
-        size_hist_plot(size_dataset=data_frame, plot_title=file_name)
+        interarrival_hist_plot(in_ar_ti=data_frame, plot_title=file_name)
+        # size_hist_plot(size_dataset=data_frame, plot_title=file_name)
 
 
 if __name__ == '__main__':

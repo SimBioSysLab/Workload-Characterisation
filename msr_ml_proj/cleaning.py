@@ -8,7 +8,7 @@ from datetime import datetime
 import pandas as pd
 
 # PROJECT LIBRARIES
-from utils import get_all_uncleaned_files, get_cleaned_files_path
+from msr_ml_proj.utils import get_all_uncleaned_files, get_cleaned_files_path
 from loadconfig import config
 
 

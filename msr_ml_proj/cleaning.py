@@ -28,6 +28,7 @@ def convert_to_df(filename):
         value[0] = convert_filetime_to_dt(float(value[0]))
 
     file_path = get_cleaned_files_path(file_name=filename)
+    print(file_path)
     dataset = pd.DataFrame(all_values, columns=config.config_["HEADER_LIST"])
     dataset.to_csv(file_path, index=False)
 

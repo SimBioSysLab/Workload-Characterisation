@@ -4,7 +4,7 @@ from loadconfig import config
 
 
 def get_cleaned_files_path(file_name):
-    df_file_name = file_name.split('/')[2]
+    df_file_name = file_name.split('/')[3]
     df_file_name = "df{}".format(df_file_name)
     constructed_filename = "./{}/msr_traces/cleaned_dataset/{}".format(config.config_["DATASET_FOLDER"], df_file_name)
     return constructed_filename

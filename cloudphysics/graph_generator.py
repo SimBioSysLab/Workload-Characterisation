@@ -45,6 +45,11 @@ def generate_iatime_histogram(filename):
 
     label_text = "Interarrival time of {} [LOG SCALE]".format(actual_name)
     plt.figure(figsize=(30, 20))
+    font = {'family': 'normal',
+            'size': 20}
+    plt.rc('font', **font)
+    plt.rc('xtick', labelsize=20)
+    plt.rc('ytick', labelsize=20)
     plt.title(label_text)
     plt.yscale("log")
     plt.hist(list_of_iat)

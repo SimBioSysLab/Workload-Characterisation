@@ -24,3 +24,9 @@ def get_all_uncleaned_files():
 
     all_files_list = glob.glob("./{}/msr_traces/*.csv".format(config.config_["DATASET_FOLDER"]))
     return all_files_list
+
+
+def get_graph_path(plot_title):
+
+    graph_path = "./{}/msr_traces/iat/{}".format(config.config_["GRAPH_FOLDER"], plot_title)
+    return graph_path

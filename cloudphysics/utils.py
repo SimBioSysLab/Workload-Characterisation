@@ -110,18 +110,19 @@ def ret_server_result_json():
     return actual_path
 
 
-def return_rw_graph_path():
-
-    actual_path = "./{}/rwgraph.eps".format(config.config_["GRAPH_FOLDER"])
-
-    return actual_path
-
-
 def return_iat_graph_path(filename):
     actual_name = filename.split("/")[-1]
     actual_name = actual_name.split(".")[0]
 
     actual_path = "./{}/iat/{}.png".format(config.config_["GRAPH_FOLDER"], actual_name)
+    return actual_path, actual_name
+
+
+def return_rw_graph_path(filename):
+    actual_name = filename.split("/")[-1]
+    actual_name = actual_name.split(".")[0]
+
+    actual_path = "./{}/{}_rw.png".format(config.config_["GRAPH_FOLDER"], actual_name)
     return actual_path, actual_name
 
 
@@ -207,3 +208,10 @@ def broken_hrs_to_csv():
 def ranked_result():
     ranked_res = "./{}/ranked_result.csv".format(config.config_["RESULTS_FOLDER"])
     return ranked_res
+
+
+def return_scatter_plot_file(filename):
+    actual_name = filename.split("/")[-1]
+    actual_name = actual_name.split(".")[0]
+    actual_path = "./{}/scatter/{}_blkno_scatter.png".format(config.config_["GRAPH_FOLDER"], actual_name)
+    return actual_path, actual_name

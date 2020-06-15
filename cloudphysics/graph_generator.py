@@ -11,7 +11,7 @@ import numpy
 
 import matplotlib.pyplot as plt
 from cloudphysics.utils import ret_server_result_json, return_iat_graph_path, ret_all_csv_trace_files, \
-    workload_unique_block_path, return_rw_graph_path, return_scatter_plot_file
+    workload_unique_block_path, return_rw_graph_path, return_scatter_plot_file, color_fader
 
 
 def generate_read_write_graph():
@@ -111,12 +111,17 @@ def generate_spatial_count_scatter(filename):
     plt.title(label_text)
     plt.xlabel("Difference in Time")
     plt.ylabel("Locality of items requested")
-    color_map = plt.cm.get_cmap('Blues')
+    color_map = plt.cm.get_cmap('cool')
     rev_color_map = color_map.reversed()
-    plt.scatter(dataset["TIME_DIFFERENCE"], dataset["BLOCK_NUMBER"], c=dataset["BLOCK_NUMBER"], s=500,
+    marker_size = 15
+    dataset['FREQUENCY'] = dataset.groupby('BLOCK_NUMBER')['BLOCK_NUMBER'].transform('count')
+    plt.scatter(dataset["TIME_DIFFERENCE"], dataset["BLOCK_NUMBER"], marker_size, c=dataset["FREQUENCY"],
                 cmap=rev_color_map)
+    cbar = plt.colorbar()
+    cbar.set_label("No of items")
     plt.savefig(opfilename, format="png")
     plt.show()
+    del dataset
 
 
 def run_generate_graphs():

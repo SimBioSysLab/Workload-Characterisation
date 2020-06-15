@@ -1,7 +1,8 @@
 import os
 import glob
 from loadconfig import config
-
+import matplotlib as mpl
+import numpy as np
 
 def read_all_cp_trace_files():
     all_files_list = glob.glob("./{}/cloudphysics/*.vscsitrace".format(config.config_["DATASET_FOLDER"]))
@@ -215,3 +216,9 @@ def return_scatter_plot_file(filename):
     actual_name = actual_name.split(".")[0]
     actual_path = "./{}/scatter/{}_blkno_scatter.png".format(config.config_["GRAPH_FOLDER"], actual_name)
     return actual_path, actual_name
+
+
+def color_fader(c1, c2, mix=0): #fade (linear interpolate) from color c1 (at mix=0) to c2 (mix=1)
+    c1 = np.array(mpl.colors.to_rgb(c1))
+    c2 = np.array(mpl.colors.to_rgb(c2))
+    return mpl.colors.to_hex((1-mix) * c1 + mix*c2)

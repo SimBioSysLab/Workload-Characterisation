@@ -13,17 +13,22 @@ from msr_ml_proj.cleaning import run as cleaning_run
 from msr_ml_proj.plots import run as plot_run
 from msr_ml_proj.feature_engineering import run as feature_run
 
+from cp_block_level.feature_engineering import run_feature_engineering as cpb_feature_run
 
-def load_configuration(dataset):
 
-    assert dataset in ["cp", "msr"], "Wrong Dataset Name"
+def load_configuration(dataset, ip_path=None, op_path=None):
+
+    assert dataset in ["cp", "msr", "cpb"], "Wrong Dataset Name"
 
     config.dataset = dataset
     if config.dataset == "msr":
         config.load_msr_yaml()
     if config.dataset == "cp":
         config.load_cp_yaml()
-
+    if config.dataset == "cpb":
+        if not ip_path or not op_path:
+            print("Please enter current input and output path")
+        config.load_cpb_yaml(ip_path=ip_path, op_path=op_path)
     config.load_logging_config()
 
 
@@ -50,17 +55,35 @@ def run_msr_traces():
     logging.info("Total running time is : {}".format(time_))
 
 
+def run_cpb_traces():
+    st_time = time.time()
+    cpb_feature_run()
+    end_time = time.time()
+    time_ = end_time - st_time
+    logging.info("Total running time is: {}".format(time_))
+
+
 if __name__ == '__main__':
     import argparse
     argument_parser = argparse.ArgumentParser()
     argument_parser.add_argument("dataset", help="Either cloudphysics or msr")
+    argument_parser.add_argument("--ip_file", help="Input file path, only for cpb")
+    argument_parser.add_argument("--op_file", help="Output file path, only for cpb")
     args = argument_parser.parse_args()
     dataset_ = args.dataset
-    load_configuration(dataset=dataset_)
+    ip_path = args.ip_file
+    op_path = args.op_file
+    print("IP Path: {}, OP Path: {}".format(ip_path, op_path))
+    if dataset_ == "cpb":
+        load_configuration(dataset=dataset_, ip_path=ip_path, op_path=op_path)
+    else:
+        load_configuration(dataset=dataset_)
 
     if dataset_ == "cp":
         run_cp_traces()
     if dataset_ == "msr":
         run_msr_traces()
+    if dataset_ == "cpb":
+        run_cpb_traces()
     else:
         pass

@@ -20,26 +20,28 @@ def read_write_count(file_path):
 
     read_unique_count = read_dataset.BLOCK_NUMBER.nunique()
     write_unique_count = write_dataset.BLOCK_NUMBER.nunique()
+    total_unique_count = dataset.BLOCK_NUMBER.nunique()
 
     del read_dataset
     del write_dataset
     del dataset
 
-    return read_count, write_count, read_unique_count, write_unique_count
+    return read_count, write_count, read_unique_count, write_unique_count, total_unique_count
 
 
 def read_write_meta(all_files_list):
     all_read_write_dict = []
     for file_ in all_files_list:
         st_time = time.time()
-        read_count, write_count, read_unique, write_unique = read_write_count(file_path=file_)
+        read_count, write_count, read_unique, write_unique, total_count = read_write_count(file_path=file_)
         file_name = extract_file_name(file_)
         temp_dict = {
             "file_name": file_name,
             "read_count": read_count,
             "write_count": write_count,
             "read_unique": read_unique,
-            "write_unique": write_unique
+            "write_unique": write_unique,
+            "total_unique": total_count
         }
         all_read_write_dict.append(temp_dict)
         end_time = time.time()

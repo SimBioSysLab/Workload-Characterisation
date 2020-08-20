@@ -4,9 +4,10 @@ import json
 import logging
 import time
 import pandas as pd
+import arrow
 
 from loadconfig import config
-from cp_block_level.utils import read_all_cpb_traces, extract_file_name
+from cp_block_level.utils import read_all_cpb_traces, extract_file_name, create_extraction_folders
 
 
 def read_write_count(file_path):
@@ -52,6 +53,42 @@ def read_write_meta(all_files_list):
     logging.info("Finished writing to json file")
 
 
+def split_files_into_days(dataset_file):
+    data_f = open(dataset_file)
+    dataset = csv.DictReader(data_f, fieldnames=config.config_["HEADERS"])
+
+    all_days_list = list()
+    curr_time_final = None
+    temp_list_for_days = list()
+    i = 1
+    for row in dataset:
+        if not curr_time_final:
+            curr_time_final = int(row['ACCESS_TIME'])
+
+        if int(row["ACCESS_TIME"]) - curr_time_final <= config.config_["DAY_MS"]:
+            temp_list_for_days.append(row)
+        else:
+            print("Finished processing list {}".format(i))
+            i += 1
+            all_days_list.append(temp_list_for_days)
+            temp_list_for_days = list()
+            temp_list_for_days.append(row)
+            curr_time_final = int(row['ACCESS_TIME'])
+
+    all_days_list.append(temp_list_for_days)
+    return all_days_list
+
+
+def split_feature_files(all_files_list):
+    create_extraction_folders()
+    all_days_json = []
+    curr_time_final = None
+    for file_ in all_files_list:
+        split_lists = split_files_into_days(dataset_file=file_)
+        print(len(split_lists))
+
+
 def run_feature_engineering():
     all_trace_files = read_all_cpb_traces()
-    read_write_meta(all_files_list=all_trace_files)
+    # read_write_meta(all_files_list=all_trace_files)
+    split_feature_files(all_files_list=all_trace_files)

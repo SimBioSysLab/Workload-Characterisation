@@ -58,6 +58,7 @@ class Configuration(object):
         self.config_["LOGGING_FOLDER"] = all_config_dict["CONSTANTS"]["LOGGING_FOLDER"]
         self.config_["GRAPH_FOLDER"] = all_config_dict["CONSTANTS"]["GRAPH_FOLDER"]
         self.config_["RESULTS_FOLDER"] = all_config_dict["CONSTANTS"]["RESULTS_FOLDER"]
+        self.config_["DAY_MS"] = all_config_dict["CONSTANTS"]["DAY_MS"]
 
         self.config_["HEADERS"] = all_config_dict["HEADERS"]
         self.config_["IP_PATH"] = ip_path

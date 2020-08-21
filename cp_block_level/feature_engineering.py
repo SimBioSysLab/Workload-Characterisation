@@ -5,6 +5,7 @@ import logging
 import time
 import pandas as pd
 import arrow
+import threading
 
 from loadconfig import config
 from cp_block_level.utils import read_all_cpb_traces, extract_file_name, create_extraction_folders, \
@@ -80,18 +81,23 @@ def split_files_into_days(dataset_file):
     return all_days_list
 
 
+def thread_level_for_writing(obj, file_, day):
+    file_name = get_extraction_folder(file_, day)
+    write_to_files = open(file_name, "w")
+    writer = csv.DictWriter(write_to_files, fieldnames=config.config_["HEADERS"])
+    writer.writeheader()
+    writer.writerows(day)
+    logging.info("Finished writing to file: {}".format(file_name))
+
+
 def split_feature_files(all_files_list):
     create_extraction_folders()
     for file_ in all_files_list:
         st_time = time.time()
         split_lists = split_files_into_days(dataset_file=file_)
         for idx, day in enumerate(split_lists):
-            file_name = get_extraction_folder(file_, idx + 1)
-            write_to_files = open(file_name, "w")
-            writer = csv.DictWriter(write_to_files, fieldnames=config.config_["HEADERS"])
-            writer.writeheader()
-            writer.writerows(day)
-            logging.info("Finished writing to file: {}".format(file_name))
+            threads = threading.Thread(target=thread_level_for_writing, args=(day, file_, idx+1))
+            threads.start()
         end_time = time.time()
         time_ = end_time - st_time
         logging.info("Finished splitting file: {} in {} seconds".format(file_, time_))

@@ -86,7 +86,7 @@ def thread_level_for_writing(obj, file_, day):
     write_to_files = open(file_name, "w")
     writer = csv.DictWriter(write_to_files, fieldnames=config.config_["HEADERS"])
     writer.writeheader()
-    writer.writerows(day)
+    writer.writerows(obj)
     logging.info("Finished writing to file: {}".format(file_name))
 
 

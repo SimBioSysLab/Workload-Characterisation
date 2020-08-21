@@ -7,7 +7,8 @@ import pandas as pd
 import arrow
 
 from loadconfig import config
-from cp_block_level.utils import read_all_cpb_traces, extract_file_name, create_extraction_folders
+from cp_block_level.utils import read_all_cpb_traces, extract_file_name, create_extraction_folders, \
+    get_extraction_folder
 
 
 def read_write_count(file_path):
@@ -68,7 +69,7 @@ def split_files_into_days(dataset_file):
         if int(row["ACCESS_TIME"]) - curr_time_final <= config.config_["DAY_MS"]:
             temp_list_for_days.append(row)
         else:
-            print("Finished processing list {}".format(i))
+            logging.info("Finished extracting day {} from {}".format(i, dataset_file))
             i += 1
             all_days_list.append(temp_list_for_days)
             temp_list_for_days = list()
@@ -81,11 +82,19 @@ def split_files_into_days(dataset_file):
 
 def split_feature_files(all_files_list):
     create_extraction_folders()
-    all_days_json = []
-    curr_time_final = None
     for file_ in all_files_list:
+        st_time = time.time()
         split_lists = split_files_into_days(dataset_file=file_)
-        print(len(split_lists))
+        for idx, day in enumerate(split_lists):
+            file_name = get_extraction_folder(file_, idx + 1)
+            write_to_files = open(file_name, "w")
+            writer = csv.DictWriter(write_to_files, fieldnames=config.config_["HEADERS"])
+            writer.writeheader()
+            writer.writerows(day)
+            logging.info("Finished writing to file: {}".format(file_name))
+        end_time = time.time()
+        time_ = end_time - st_time
+        logging.info("Finished splitting file: {} in {} seconds".format(file_, time_))
 
 
 def run_feature_engineering():

@@ -49,11 +49,10 @@ class Configuration(object):
         self.config_["TYPE_1_INDICES"] = all_config_dict["TYPE_1_INDICES"]
         self.config_["TYPE_2_INDICES"] = all_config_dict["TYPE_2_INDICES"]
 
-    def load_cpb_yaml(self, ip_path, op_path):
+    def load_cpb_yaml(self, ip_path, op_path, split_file, op_aggr=None):
         file_name = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'cpb.yml')
         config_file = open(file=file_name)
         all_config_dict = yaml.load(config_file, Loader=yaml.FullLoader)
-        print(all_config_dict)
         self.config_["DATASET_FOLDER"] = all_config_dict["CONSTANTS"]["DATASET_FOLDER"]
         self.config_["LOGGING_FOLDER"] = all_config_dict["CONSTANTS"]["LOGGING_FOLDER"]
         self.config_["GRAPH_FOLDER"] = all_config_dict["CONSTANTS"]["GRAPH_FOLDER"]
@@ -63,6 +62,8 @@ class Configuration(object):
         self.config_["HEADERS"] = all_config_dict["HEADERS"]
         self.config_["IP_PATH"] = ip_path
         self.config_["OP_PATH"] = op_path
+        self.config_["SPLIT_PATH"] = split_file
+        self.config_["OP_AGGR"] = op_aggr
 
     def load_logging_config(self):
         time_zone = pytz.timezone('US/Eastern')

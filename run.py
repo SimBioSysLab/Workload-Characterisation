@@ -17,7 +17,7 @@ from msr_ml_proj.feature_engineering import run as feature_run
 from cp_block_level.feature_engineering import run_feature_engineering as cpb_feature_run
 
 
-def load_configuration(dataset, ip_path=None, op_path=None, split_file=False):
+def load_configuration(dataset, ip_path=None, op_path=None, op_aggr=None, split_file=False):
 
     assert dataset in ["cp", "msr", "cpb"], "Wrong Dataset Name"
 
@@ -31,10 +31,13 @@ def load_configuration(dataset, ip_path=None, op_path=None, split_file=False):
             print("Please enter current input and output path")
             exit(0)
         if split_file:
-            if not os.path.isdir(op_path) or not os.path.exists(op_path):
+            if not os.path.isdir(op_path) or not os.path.exists(op_path) or not os.path.exists(op_aggr) or \
+                    not os.path.isdir(op_aggr):
                 print("Please enter path of folder to split files")
                 exit(0)
-        config.load_cpb_yaml(ip_path=ip_path, op_path=op_path)
+            config.load_cpb_yaml(ip_path=ip_path, op_path=op_path, op_aggr=op_aggr, split_file=split_file)
+        else:
+            pass
     config.load_logging_config()
 
 
@@ -75,16 +78,17 @@ if __name__ == '__main__':
     argument_parser.add_argument("dataset", help="Either cloudphysics or msr")
     argument_parser.add_argument("--ip_file", help="Input file path, only for cpb")
     argument_parser.add_argument("--op_file", help="Output file path, only for cpb")
+    argument_parser.add_argument("--op_aggr", help="Output file path for multiple days, cpb, if splitting")
     argument_parser.add_argument("--split_script", help="1 or 0 to split the files into particular slices")
     args = argument_parser.parse_args()
     dataset_ = args.dataset
     ip_path = args.ip_file
     op_path = args.op_file
+    op_aggr = args.op_aggr
     split_file = int(args.split_script)
-    print("IP Path: {}, OP Path: {}".format(ip_path, op_path))
     if dataset_ == "cpb":
         if split_file == 1:
-            load_configuration(dataset=dataset_, ip_path=ip_path, op_path=op_path, split_file=True)
+            load_configuration(dataset=dataset_, ip_path=ip_path, op_path=op_path, op_aggr=op_aggr, split_file=True)
         else:
             load_configuration(dataset=dataset_, ip_path=ip_path, op_path=op_path, split_file=False)
     else:

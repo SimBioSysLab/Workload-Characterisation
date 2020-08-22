@@ -1,10 +1,9 @@
 import os
 import glob
+import csv
 from loadconfig import config
 
-
 def read_all_cpb_traces():
-    print(config.config_["IP_PATH"])
     all_files_list = glob.glob("{}/*.csv".format(config.config_["IP_PATH"]))
     return all_files_list
 
@@ -47,9 +46,40 @@ def create_extraction_folders():
         os.mkdir(config.config_["base_7"])
 
 
+def create_multi_day_extraction():
+    config.config_["base_12"] = "{}days_12".format(config.config_["OP_AGGR"])
+    config.config_["base_123"] = "{}days_123".format(config.config_["OP_AGGR"])
+    config.config_["base_1234"] = "{}days_1234".format(config.config_["OP_AGGR"])
+    config.config_["base_12345"] = "{}days_12345".format(config.config_["OP_AGGR"])
+    config.config_["base_123456"] = "{}days_123456".format(config.config_["OP_AGGR"])
+
+    if not os.path.exists(config.config_["base_12"]):
+        os.mkdir(config.config_["base_12"])
+
+    if not os.path.exists(config.config_["base_123"]):
+        os.mkdir(config.config_["base_123"])
+
+    if not os.path.exists(config.config_["base_1234"]):
+        os.mkdir(config.config_["base_1234"])
+
+    if not os.path.exists(config.config_["base_12345"]):
+        os.mkdir(config.config_["base_12345"])
+
+    if not os.path.exists(config.config_["base_123456"]):
+        os.mkdir(config.config_["base_123456"])
+
+
 def get_extraction_folder(file_name, day_num):
     actual_name = file_name.split("/")[-1]
     actual_name = actual_name.split(".")[0]
     base = "base_{}".format(day_num)
+    base_n = "{}/{}.csv".format(config.config_[base], actual_name)
+    return base_n
+
+
+def get_multi_extraction(file_name, day_nums):
+    actual_name = file_name.split("/")[-1]
+    actual_name = actual_name.split(".")[0]
+    base = "base_{}".format(day_nums)
     base_n = "{}/{}.csv".format(config.config_[base], actual_name)
     return base_n

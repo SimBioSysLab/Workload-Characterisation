@@ -3,11 +3,12 @@ import json
 import logging
 import time
 import pandas as pd
+import math
 import threading
 
 from loadconfig import config
 from cp_block_level.utils import read_all_cpb_traces, extract_file_name, create_extraction_folders, \
-    get_extraction_folder, create_multi_day_extraction, get_multi_extraction
+    get_extraction_folder, create_multi_day_extraction, get_multi_extraction, get_all_extraction_files
 
 
 def read_write_count(file_path):
@@ -163,18 +164,113 @@ def thread_split_writing_per_file(dataset_file, day):
     print("Finished running file {} for day {} in time {} seconds".format(dataset_file, day, time_))
 
 
+def process_split_per_file(dataset_file):
+
+    extraction_files_list, multi_extraction_file_list = get_all_extraction_files(file_name=dataset_file)
+    file_writer = dict()
+    for idx, file_ in enumerate(extraction_files_list):
+        open_file = open(file_, "w")
+        csv_writer = csv.DictWriter(open_file, fieldnames=config.config_["HEADERS"])
+        csv_writer.writeheader()
+        base = "base_{}".format(idx+1)
+        print(file_, base)
+        file_writer[base] = csv_writer
+
+    base = "base_1"
+    for idx, file_ in enumerate(multi_extraction_file_list):
+        open_file = open(file_, "w")
+        csv_writer = csv.DictWriter(open_file, fieldnames=config.config_["HEADERS"])
+        csv_writer.writeheader()
+        base = "{}{}".format(base, idx+2)
+        print(file_, base)
+        file_writer[base] = csv_writer
+
+    data_file = open(dataset_file, "r")
+    dataset = csv.DictReader(data_file, fieldnames=config.config_["HEADERS"])
+    current_time = None
+    i = 1
+    st_time = time.time()
+    for row in dataset:
+
+        if i % 100000 == 0:
+            print("Processing line {} of file {}".format(i, dataset_file))
+
+        if not current_time:
+            current_time = int(row["ACCESS_TIME"])
+
+        time_diff = int(row["ACCESS_TIME"]) - current_time
+        k = math.ceil(time_diff / config.config_["DAY_MS"])
+
+        if k == 1:
+            file_writer["base_1"].writerow(row)
+            base = "base_1"
+            for i in range(2, 7):
+                base = "{}{}".format(base, i)
+                file_writer[base].writerow(row)
+
+        if k == 2:
+            file_writer["base_2"].writerow(row)
+            base = "base_1"
+            for i in range(2, 7):
+                base = "{}{}".format(base, i)
+                file_writer[base].writerow(row)
+
+        if k == 3:
+            file_writer["base_3"].writerow(row)
+            base = "base_12"
+            for i in range(3, 7):
+                base = "{}{}".format(base, i)
+                file_writer[base].writerow(row)
+
+        if k == 4:
+            file_writer["base_4"].writerow(row)
+            base = "base_123"
+            for i in range(4, 7):
+                base = "{}{}".format(base, i)
+                file_writer[base].writerow(row)
+
+        if k == 5:
+
+            file_writer["base_5"].writerow(row)
+            base = "base_1234"
+            for i in range(2, 7):
+                base = "{}{}".format(base, i)
+                file_writer[base].writerow(row)
+
+        if k == 6:
+
+            file_writer["base_6"].writerow(row)
+            base = "base_12345"
+            for i in range(6, 7):
+                base = "{}{}".format(base, i)
+                file_writer[base].writerow(row)
+
+        if k == 7:
+            file_writer["base_7"].writerow(row)
+
+        i = i + 1
+
+    end_time = time.time()
+    tim_ = end_time - st_time
+    print("Time taken to process {} is {}".format(dataset_file, tim_))
+
+
 def split_feature_files(all_files_list):
     create_extraction_folders()
     create_multi_day_extraction()
-    for file_ in all_files_list:
-        thread_list = []
-        for day in range(7):
-            t = threading.Thread(target=thread_split_writing_per_file, args=(file_, day+1))
-            thread_list.append(t)
-            t.start()
 
-        for val in thread_list:
-            val.join()
+    for file_ in all_files_list:
+        process_split_per_file(dataset_file=file_)
+
+    # for file_ in all_files_list:
+    #     thread_list = []
+    #     for day in range(7):
+    #         t = threading.Thread(target=thread_split_writing_per_file, args=(file_, day+1))
+    #         thread_list.append(t)
+    #         t.start()
+    #
+    #     for val in thread_list:
+    #         val.join()
 
     # for file_ in all_files_list:
     #     st_time = time.time()

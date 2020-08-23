@@ -3,6 +3,7 @@ import glob
 import csv
 from loadconfig import config
 
+
 def read_all_cpb_traces():
     all_files_list = glob.glob("{}/*.csv".format(config.config_["IP_PATH"]))
     return all_files_list
@@ -67,6 +68,21 @@ def create_multi_day_extraction():
 
     if not os.path.exists(config.config_["base_123456"]):
         os.mkdir(config.config_["base_123456"])
+
+
+def get_all_extraction_files(file_name):
+    file_names_list = []
+    multi_file_names = []
+
+    for i in range(7):
+        file_names_list.append(get_extraction_folder(file_name=file_name, day_num=i+1))
+
+    base = "1"
+    for i in range(2, 7):
+        base = "{}{}".format(base, i)
+        multi_file_names.append(get_multi_extraction(file_name=file_name, day_nums=base))
+
+    return file_names_list, multi_file_names
 
 
 def get_extraction_folder(file_name, day_num):

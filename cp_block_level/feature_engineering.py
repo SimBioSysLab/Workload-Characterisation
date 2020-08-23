@@ -5,6 +5,7 @@ import time
 import pandas as pd
 import math
 import threading
+from multiprocessing import Pool
 
 from loadconfig import config
 from cp_block_level.utils import read_all_cpb_traces, extract_file_name, create_extraction_folders, \
@@ -173,7 +174,6 @@ def process_split_per_file(dataset_file):
         csv_writer = csv.DictWriter(open_file, fieldnames=config.config_["HEADERS"])
         csv_writer.writeheader()
         base = "base_{}".format(idx+1)
-        print(file_, base)
         file_writer[base] = csv_writer
 
     base = "base_1"
@@ -182,18 +182,17 @@ def process_split_per_file(dataset_file):
         csv_writer = csv.DictWriter(open_file, fieldnames=config.config_["HEADERS"])
         csv_writer.writeheader()
         base = "{}{}".format(base, idx+2)
-        print(file_, base)
         file_writer[base] = csv_writer
 
     data_file = open(dataset_file, "r")
     dataset = csv.DictReader(data_file, fieldnames=config.config_["HEADERS"])
     current_time = None
-    i = 1
+    count = -1
     st_time = time.time()
     for row in dataset:
-
-        if i % 100000 == 0:
-            print("Processing line {} of file {}".format(i, dataset_file))
+        count += 1
+        if count % 100000 == 0:
+            logging.info("Processing line {} of file {}".format(count, dataset_file))
 
         if not current_time:
             current_time = int(row["ACCESS_TIME"])
@@ -201,7 +200,7 @@ def process_split_per_file(dataset_file):
         time_diff = int(row["ACCESS_TIME"]) - current_time
         k = math.ceil(time_diff / config.config_["DAY_MS"])
 
-        if k == 1:
+        if k == 1 or k == 0:
             file_writer["base_1"].writerow(row)
             base = "base_1"
             for i in range(2, 7):
@@ -230,7 +229,6 @@ def process_split_per_file(dataset_file):
                 file_writer[base].writerow(row)
 
         if k == 5:
-
             file_writer["base_5"].writerow(row)
             base = "base_1234"
             for i in range(2, 7):
@@ -238,7 +236,6 @@ def process_split_per_file(dataset_file):
                 file_writer[base].writerow(row)
 
         if k == 6:
-
             file_writer["base_6"].writerow(row)
             base = "base_12345"
             for i in range(6, 7):
@@ -248,46 +245,24 @@ def process_split_per_file(dataset_file):
         if k == 7:
             file_writer["base_7"].writerow(row)
 
-        i = i + 1
-
     end_time = time.time()
-    tim_ = end_time - st_time
-    print("Time taken to process {} is {}".format(dataset_file, tim_))
+    time_ = end_time - st_time
+    logging.info("Time taken to process {} is {}".format(dataset_file, time_))
 
 
 def split_feature_files(all_files_list):
+    logging.info("Starting the splitting of files! Extracting files!")
     create_extraction_folders()
     create_multi_day_extraction()
 
-    for file_ in all_files_list:
-        process_split_per_file(dataset_file=file_)
-
-    # for file_ in all_files_list:
-    #     thread_list = []
-    #     for day in range(7):
-    #         t = threading.Thread(target=thread_split_writing_per_file, args=(file_, day+1))
-    #         thread_list.append(t)
-    #         t.start()
-    #
-    #     for val in thread_list:
-    #         val.join()
-
-    # for file_ in all_files_list:
-    #     st_time = time.time()
-    #     split_lists = split_files_into_days(dataset_file=file_)
-    #     for idx, day in enumerate(split_lists):
-    #         threads = threading.Thread(target=thread_level_for_writing, args=(day, file_, idx+1))
-    #         threads.start()
-    #     end_time = time.time()
-    #     time_ = end_time - st_time
-    #     logging.info("Finished splitting file: {} in {} seconds".format(file_, time_))
+    with Pool(4) as p:
+        p.map(process_split_per_file, all_files_list)
 
 
 def run_feature_engineering():
-    print("Input Path is: {}".format(config.config_["IP_PATH"]))
-    print("Output Path is: {}".format(config.config_["OP_PATH"]))
-    print("Aggregate Path is: {}".format(config.config_["OP_AGGR"]))
+    logging.info("Input Path is: {}".format(config.config_["IP_PATH"]))
+    logging.info("Output Path is: {}".format(config.config_["OP_PATH"]))
+    logging.info("Aggregate Path is: {}".format(config.config_["OP_AGGR"]))
     all_trace_files = read_all_cpb_traces()
-    # read_write_meta(all_files_list=all_trace_files)
     if config.config_["SPLIT_PATH"]:
         split_feature_files(all_files_list=all_trace_files)

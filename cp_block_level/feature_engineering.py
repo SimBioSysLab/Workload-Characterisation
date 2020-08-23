@@ -255,8 +255,8 @@ def split_feature_files(all_files_list):
     create_extraction_folders()
     create_multi_day_extraction()
 
-    with Pool(4) as p:
-        p.map(process_split_per_file, all_files_list)
+    for file_ in all_files_list:
+        process_split_per_file(dataset_file=file_)
 
 
 def run_feature_engineering():

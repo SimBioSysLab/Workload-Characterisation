@@ -1,6 +1,7 @@
 import os
 import glob
-import csv
+import pytz
+import datetime
 from loadconfig import config
 
 
@@ -99,3 +100,11 @@ def get_multi_extraction(file_name, day_nums):
     base = "base_{}".format(day_nums)
     base_n = "{}/{}.csv".format(config.config_[base], actual_name)
     return base_n
+
+
+def get_logging_string():
+    time_zone = pytz.timezone('US/Eastern')
+    curr_date = datetime.datetime.now(tz=time_zone)
+    date_as_string = curr_date.strftime('%Y-%m-%d_%H-%M-%S')
+    filename = "./{}/{}.log".format(config.config_["LOGGING_FOLDER"], date_as_string)
+    return filename

@@ -108,3 +108,9 @@ def get_logging_string():
     date_as_string = curr_date.strftime('%Y-%m-%d_%H-%M-%S')
     filename = "./{}/{}.log".format(config.config_["LOGGING_FOLDER"], date_as_string)
     return filename
+
+
+def get_all_day_split(day):
+    base_n = "base_{}".format(day)
+    all_day_files = glob.glob("{}/*.csv".format(config.config_[base_n]))
+    return all_day_files

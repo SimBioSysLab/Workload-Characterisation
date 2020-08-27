@@ -10,7 +10,7 @@ from multiprocessing import Pool
 from loadconfig import config
 from cp_block_level.utils import read_all_cpb_traces, extract_file_name, create_extraction_folders, \
     get_extraction_folder, create_multi_day_extraction, get_multi_extraction, get_all_extraction_files, \
-    get_logging_string
+    get_logging_string, get_all_day_split
 
 
 def read_write_count(file_path):
@@ -156,15 +156,27 @@ def split_feature_files(all_files_list):
     logging.info("Starting the splitting of files! Extracting files!")
     create_extraction_folders()
     create_multi_day_extraction()
-
-    with Pool(2) as p:
-        p.map(process_split_per_file, all_files_list)
+    file_list = ['01', '02', '04', '05', '08', '09', '10', '11', '15', '16', '17', '21', '22', '24', '26', '29', '31',
+                 '36', '39', '41', '46', '47', '49', '52', '53', '55', '58', '73', '75', '78', '89', '102']
+    appened_files_list = ["{}w{}.csv".format(config.config_["IP_PATH"], t) for t in file_list]
+    print(appened_files_list)
+    # with Pool(2) as p:
+    #     p.map(process_split_per_file, all_files_list)
     # for file_ in all_files_list:
     #     process_split_per_file(dataset_file=file_)
 
 
+def extract_stats(file_list):
+    for file_ in file_list:
+        pass
+
+
 def count_statistics_for_individual():
-    pass
+    create_extraction_folders()
+    create_multi_day_extraction()
+    for day in range(7):
+        all_files_list = get_all_day_split(day=day+1)
+        print(all_files_list)
 
 
 def run_feature_engineering():
@@ -174,3 +186,6 @@ def run_feature_engineering():
     all_trace_files = read_all_cpb_traces()
     if config.config_["SPLIT_PATH"]:
         split_feature_files(all_files_list=all_trace_files)
+        # count_statistics_for_individual()
+    if config.config_["COMPUTE_STAT"]:
+        count_statistics_for_individual()

@@ -114,3 +114,7 @@ def get_all_day_split(day):
     base_n = "base_{}".format(day)
     all_day_files = glob.glob("{}/*.csv".format(config.config_[base_n]))
     return all_day_files
+
+
+def get_split_files():
+    pass

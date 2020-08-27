@@ -16,7 +16,6 @@ from cp_block_level.utils import read_all_cpb_traces, extract_file_name, create_
 def read_write_count(file_path):
     logging.info("Processing file: {}".format(file_path))
     dataset = pd.read_csv(file_path, names=config.config_["HEADERS"])
-    print(dataset.head(10))
     read_dataset = dataset[dataset.READ_WRITE == "r"]
     write_dataset = dataset[dataset.READ_WRITE == "w"]
     read_count = len(read_dataset.index)
@@ -34,6 +33,8 @@ def read_write_count(file_path):
 
 
 def read_write_meta(all_files_list):
+    print("Inside")
+    print(all_files_list)
     all_read_write_dict = []
     for file_ in all_files_list:
         st_time = time.time()
@@ -166,9 +167,29 @@ def split_feature_files(all_files_list):
     #     process_split_per_file(dataset_file=file_)
 
 
-def extract_stats(file_list):
+def extract_stats(file_list, day):
+    stats_dict = []
     for file_ in file_list:
-        pass
+        st_time = time.time()
+        read_count, write_count, read_unique, write_unique, total_count = read_write_count(file_path=file_)
+        file_name = extract_file_name(file_)
+        temp_dict = {
+            "file_name": file_name,
+            "read_count": read_count,
+            "write_count": write_count,
+            "read_unique": read_unique,
+            "write_unique": write_unique,
+            "total_unique": total_count
+        }
+        stats_dict.append(temp_dict)
+        end_time = time.time()
+        time_ = end_time - st_time
+        logging.info("Finished processing file: {} in {} seconds".format(file_, time_))
+    base_n = "base_{}".format(day)
+    write_to_json = "{}/stats.json".format(config.config_[base_n])
+    with open(write_to_json, 'w') as outfile:
+        json.dump(stats_dict, outfile)
+    logging.info("Finished writing to json file")
 
 
 def count_statistics_for_individual():
@@ -176,6 +197,7 @@ def count_statistics_for_individual():
     create_multi_day_extraction()
     for day in range(7):
         all_files_list = get_all_day_split(day=day+1)
+        extract_stats(file_list=all_files_list, day=day+1)
         print(all_files_list)
 
 
@@ -186,6 +208,7 @@ def run_feature_engineering():
     all_trace_files = read_all_cpb_traces()
     if config.config_["SPLIT_PATH"]:
         split_feature_files(all_files_list=all_trace_files)
-        # count_statistics_for_individual()
     if config.config_["COMPUTE_STAT"]:
-        count_statistics_for_individual()
+        # count_statistics_for_individual()
+        # count_statistics_for_individual()
+        read_write_meta(all_files_list=read_all_cpb_traces())

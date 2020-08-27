@@ -40,10 +40,15 @@ def load_configuration(dataset, ip_path=None, op_path=None, op_aggr=None, split_
 
             config.load_cpb_yaml(ip_path=ip_path, op_path=op_path, op_aggr=op_aggr, split_file=split_file)
         if compute_stat:
-            if not op_path or not os.path.isdir(op_path) or not os.path.exists(op_path) or not \
-                    os.path.exists(op_aggr) or not os.path.isdir(op_aggr):
-                print("Please enter the correct input and output path")
-                exit(0)
+            print(ip_path)
+            print(op_path)
+            print(op_aggr)
+            print(split_file)
+            print(compute_stat)
+            # if not op_path or not os.path.isdir(op_path) or not os.path.exists(op_path) or not \
+            #         os.path.exists(op_aggr) or not os.path.isdir(op_aggr):
+            #     print("Please enter the correct input and output path")
+            #     exit(0)
             config.load_cpb_yaml(ip_path=ip_path, op_path=op_path, op_aggr=op_aggr, split_file=split_file,
                                  compute_stat=True)
         else:
@@ -103,7 +108,8 @@ if __name__ == '__main__':
             load_configuration(dataset=dataset_, ip_path=ip_path, op_path=op_path, op_aggr=op_aggr, split_file=True)
 
         if compute_stat == 1:
-            load_configuration(dataset=dataset_, op_path=op_path, op_aggr=op_aggr, split_file=False, compute_stat=True)
+            load_configuration(dataset=dataset_, ip_path=ip_path, op_path=op_path, op_aggr=op_aggr, split_file=False,
+                               compute_stat=True)
         else:
             load_configuration(dataset=dataset_, op_path=op_path, op_aggr=op_aggr, split_file=False, compute_stat=False)
     else:

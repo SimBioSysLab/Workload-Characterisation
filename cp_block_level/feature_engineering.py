@@ -160,8 +160,8 @@ def split_feature_files(all_files_list):
                  '36', '39', '41', '46', '47', '49', '52', '53', '55', '58', '73', '75', '78', '89', '102']
     appened_files_list = ["{}w{}.csv".format(config.config_["IP_PATH"], t) for t in file_list]
     print(appened_files_list)
-    # with Pool(2) as p:
-    #     p.map(process_split_per_file, all_files_list)
+    with Pool(2) as p:
+        p.map(process_split_per_file, all_files_list)
     # for file_ in all_files_list:
     #     process_split_per_file(dataset_file=file_)
 

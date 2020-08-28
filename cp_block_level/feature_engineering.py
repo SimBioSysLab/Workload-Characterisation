@@ -6,7 +6,7 @@ import time
 import pandas as pd
 import math
 from multiprocessing import Pool
-
+import glob
 from loadconfig import config
 from cp_block_level.utils import read_all_cpb_traces, extract_file_name, create_extraction_folders, \
     get_extraction_folder, create_multi_day_extraction, get_multi_extraction, get_all_extraction_files, \
@@ -202,6 +202,11 @@ def count_statistics_for_individual():
 
 
 def workload_stats(file_):
+    files_written = glob.glob("{}/*.json".format(config.config_["OP_PATH"]))
+    file_name = extract_file_name(file_)
+    write_to_json = "{}/{}_stats.json".format(config.config_["OP_PATH"], file_name)
+    if write_to_json in files_written:
+        return 1
     data_file = open(file_, "r")
     dataset = csv.DictReader(data_file, fieldnames=config.config_["HEADERS"])
     read_list = set()
@@ -229,6 +234,8 @@ def workload_stats(file_):
     write_unique = len(write_list)
     total_unqiue = len(read_list.union(write_list))
 
+    del read_list
+    del write_list
     json_dict = {
         'read_count': read_count,
         'write_count': write_count,
@@ -238,8 +245,6 @@ def workload_stats(file_):
         'total_unique': total_unqiue
     }
 
-    file_name = extract_file_name(file_)
-    write_to_json = "{}/{}_stats.json".format(config.config_["OP_PATH"], file_name)
     with open(write_to_json, 'w') as outfile:
         json.dump(json_dict, outfile)
 

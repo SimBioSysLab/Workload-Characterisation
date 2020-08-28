@@ -201,6 +201,62 @@ def count_statistics_for_individual():
         print(all_files_list)
 
 
+def workload_stats(file_):
+    data_file = open(file_, "r")
+    dataset = csv.DictReader(data_file, fieldnames=config.config_["HEADERS"])
+    read_list = set()
+    write_list = set()
+    st_time = time.time()
+    read_count = 0
+    write_count = 0
+    total_count = 0
+    for idx, row in enumerate(dataset):
+        if idx % 1000000 == 0:
+            e_t = time.time() - st_time
+            logging.info("Processing line {} of file {} in {} seconds".format(idx, file_, e_t))
+
+        if row['READ_WRITE'] == 'r':
+            read_count = read_count + 1
+            read_list.add(int(row['BLOCK_NUMBER']))
+
+        if row['READ_WRITE'] == 'w':
+            write_count = write_count + 1
+            write_list.add(int(row['BLOCK_NUMBER']))
+
+        total_count = total_count + 1
+
+    read_unique = len(read_list)
+    write_unique = len(write_list)
+    total_unqiue = len(read_list.union(write_list))
+
+    json_dict = {
+        'read_count': read_count,
+        'write_count': write_count,
+        'total_count': total_count,
+        'write_unique': write_unique,
+        'read_unique': read_unique,
+        'total_unique': total_unqiue
+    }
+
+    file_name = extract_file_name(file_)
+    write_to_json = "{}/{}_stats.json".format(config.config_["OP_PATH"], file_name)
+    with open(write_to_json, 'w') as outfile:
+        json.dump(json_dict, outfile)
+
+    end_time = time.time()
+    diff = end_time - st_time
+    logging.info("Time taken to process {} is {}".format(file_, diff))
+
+
+def workload_stats_meta():
+    file_list = read_all_cpb_traces()
+    with Pool(2) as p:
+        p.map(workload_stats, file_list)
+
+    # for file_ in file_list:
+    #     workload_stats(file_)
+
+
 def run_feature_engineering():
     logging.info("Input Path is: {}".format(config.config_["IP_PATH"]))
     logging.info("Output Path is: {}".format(config.config_["OP_PATH"]))
@@ -211,4 +267,4 @@ def run_feature_engineering():
     if config.config_["COMPUTE_STAT"]:
         # count_statistics_for_individual()
         # count_statistics_for_individual()
-        read_write_meta(all_files_list=read_all_cpb_traces())
+        workload_stats_meta()

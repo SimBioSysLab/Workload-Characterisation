@@ -206,7 +206,9 @@ def workload_stats(file_):
     file_name = extract_file_name(file_)
     write_to_json = "{}/{}_stats.json".format(config.config_["OP_PATH"], file_name)
     if write_to_json in files_written:
-        return 1
+        logging.info("File {} is already written. Not overwriting it.".format(write_to_json))
+        return None
+    
     data_file = open(file_, "r")
     dataset = csv.DictReader(data_file, fieldnames=config.config_["HEADERS"])
     read_list = set()
@@ -255,11 +257,11 @@ def workload_stats(file_):
 
 def workload_stats_meta():
     file_list = read_all_cpb_traces()
-    with Pool(2) as p:
-        p.map(workload_stats, file_list)
+    # with Pool(2) as p:
+    #     p.map(workload_stats, file_list)
 
-    # for file_ in file_list:
-    #     workload_stats(file_)
+    for file_ in file_list:
+        workload_stats(file_)
 
 
 def run_feature_engineering():

@@ -116,5 +116,7 @@ def get_all_day_split(day):
     return all_day_files
 
 
-def get_split_files():
-    pass
+def verify_file_size(file_name):
+    file_size = os.stat(file_name).st_size
+    val = round(file_size / (1024 * 1024 * 1024), 3)
+    return val > 50

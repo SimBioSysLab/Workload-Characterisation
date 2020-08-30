@@ -10,7 +10,7 @@ import glob
 from loadconfig import config
 from cp_block_level.utils import read_all_cpb_traces, extract_file_name, create_extraction_folders, \
     get_extraction_folder, create_multi_day_extraction, get_multi_extraction, get_all_extraction_files, \
-    get_logging_string, get_all_day_split
+    get_logging_string, get_all_day_split, verify_file_size
 
 
 def read_write_count(file_path):
@@ -208,11 +208,12 @@ def workload_stats(file_):
     if write_to_json in files_written:
         logging.info("File {} is already written. Not overwriting it.".format(write_to_json))
         return None
-    
+
     data_file = open(file_, "r")
     dataset = csv.DictReader(data_file, fieldnames=config.config_["HEADERS"])
     read_list = set()
     write_list = set()
+    total_list = set()
     st_time = time.time()
     read_count = 0
     write_count = 0
@@ -230,14 +231,17 @@ def workload_stats(file_):
             write_count = write_count + 1
             write_list.add(int(row['BLOCK_NUMBER']))
 
+        total_list.add(int(row['BLOCK_NUMBER']))
         total_count = total_count + 1
 
     read_unique = len(read_list)
     write_unique = len(write_list)
-    total_unqiue = len(read_list.union(write_list))
+    total_unqiue = len(total_list)
 
     del read_list
     del write_list
+    del total_list
+
     json_dict = {
         'read_count': read_count,
         'write_count': write_count,
@@ -257,11 +261,20 @@ def workload_stats(file_):
 
 def workload_stats_meta():
     file_list = read_all_cpb_traces()
-    # with Pool(2) as p:
-    #     p.map(workload_stats, file_list)
-
+    removed_files = []
     for file_ in file_list:
-        workload_stats(file_)
+        vfs = verify_file_size(file_)
+        if not vfs:
+            removed_files.append(file_)
+
+    for file_ in removed_files:
+        file_list.remove(file_)
+
+    with Pool(5) as p:
+        p.map(workload_stats, file_list)
+
+    # for file_ in file_list:
+    #     workload_stats(file_)
 
 
 def run_feature_engineering():

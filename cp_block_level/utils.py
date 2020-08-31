@@ -6,7 +6,7 @@ from loadconfig import config
 
 
 def read_all_cpb_traces():
-    all_files_list = glob.glob("{}/*.csv".format(config.config_["IP_PATH"]))
+    all_files_list = glob.glob("{}/w*.csv".format(config.config_["IP_PATH"]))
     return all_files_list
 
 

@@ -210,7 +210,7 @@ def workload_stats(file_):
         return None
 
     data_file = open(file_, "r")
-    dataset = csv.DictReader(data_file, fieldnames=config.config_["HEADERS"])
+    dataset = csv.DictReader(data_file, fieldnames=["BLOCK_NUMBER", "READ_WRITE"])
     read_list = set()
     write_list = set()
     total_list = set()
@@ -270,7 +270,7 @@ def workload_stats_meta():
     for file_ in removed_files:
         file_list.remove(file_)
 
-    with Pool(5) as p:
+    with Pool(8) as p:
         p.map(workload_stats, file_list)
 
     # for file_ in file_list:

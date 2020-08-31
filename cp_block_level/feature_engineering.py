@@ -264,7 +264,7 @@ def workload_stats_meta():
     removed_files = []
     for file_ in file_list:
         vfs = verify_file_size(file_)
-        if not vfs:
+        if vfs:
             removed_files.append(file_)
 
     for file_ in removed_files:

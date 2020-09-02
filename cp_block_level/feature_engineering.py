@@ -264,17 +264,17 @@ def workload_stats_meta():
     removed_files = []
     for file_ in file_list:
         vfs = verify_file_size(file_)
-        if not vfs:
+        if vfs:
             removed_files.append(file_)
 
     for file_ in removed_files:
         file_list.remove(file_)
 
-    with Pool(8) as p:
-        p.map(workload_stats, file_list)
+    # with Pool(8) as p:
+    #     p.map(workload_stats, file_list)
 
-    # for file_ in file_list:
-    #     workload_stats(file_)
+    for file_ in file_list:
+        workload_stats(file_)
 
 
 def run_feature_engineering():

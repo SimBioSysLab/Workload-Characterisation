@@ -5,6 +5,7 @@ import logging
 import time
 import numpy as np
 import math
+import random
 from multiprocessing import Process, Manager
 import glob
 from loadconfig import config
@@ -24,7 +25,6 @@ def read_files(day, file_name, return_dict):
     csv_file = open(curr_file, "r")
     csv_reader = csv.reader(csv_file)
     next(csv_reader)
-    val = [0]
     np_array = set()
     for row in csv_reader:
         # print(row[0])
@@ -32,12 +32,17 @@ def read_files(day, file_name, return_dict):
         # print("Values are: {}".format(np_array))
 
     np_day = "array_day_{}".format(day)
+    np_array = tuple(np_array)
+    # print("The day is {} and the array length is {} and the 10th element is {}".format(day, len(np_array),
+    # np_array[9]))
     # np_array = np.array(np_array)
     # print("The array for day {} is {}".format(day, np_array))
     return_dict[np_day] = np_array
 
 
 def compare_data(file_):
+    logging.info("Processing file {} for comparing across days".format(file_))
+    st_time = time.time()
     manager = Manager()
     return_dict = manager.dict()
     job_list = []
@@ -55,15 +60,33 @@ def compare_data(file_):
         for j in range(i+1, 7):
             inner_dict = "array_day_{}".format(j+1)
             jac_string = "day_{}_day_{}".format(i+1, j+1)
-            print("Finding jaccard of {} and {}".format(outer_dict, inner_dict))
-            print("Length of outer values is: {}".format(len(return_dict[outer_dict])))
-            print("Length of inner values is: {}".format(len(return_dict[inner_dict])))
-            # common_elem = np.intersect1d(np.array(return_dict[outer_dict]), np.array(return_dict[inner_dict]))
-            # common_elem = return_dict[outer_dict].intersection(return_dict[inner_dict])
-            # print("The common elements are {}".format(len(common_elem)))
-            jaccard_dict[jac_string] = jaccard(return_dict[outer_dict], return_dict[inner_dict])
+            # print("Finding jaccard of {} and {}".format(outer_dict, inner_dict))
+            # print("Length of outer values is: {}".format(len(return_dict[outer_dict])))
+            # print("Length of inner values is: {}".format(len(return_dict[inner_dict]), return_dict[outer_dict][9]))
+            common_elements = (set(return_dict[inner_dict]) & set(return_dict[outer_dict]))
+            union_elements = (set(return_dict[inner_dict] + return_dict[outer_dict]))
+            # print("The length of common elements is {}".format(len(common_elements)))
+            # print("The length of union elements is {}".format(len(union_elements)))
+            # val = random.sample(common_elements, 1)[0]
+            # if val in return_dict[outer_dict] and val in return_dict[inner_dict]:
+            #     print("Val: {} present in both".format(val))
 
-    print(jaccard_dict)
+            if len(return_dict[outer_dict]) > 0 and len(return_dict[inner_dict]) > 0:
+                jaccard_dict[jac_string] = len(common_elements) / len(union_elements)
+            else:
+                jaccard_dict[jac_string] = 0
+            ti_el = time.time() - st_time
+            logging.info("Finished processing file {}, days {}, value {}, time {}".format(file_, jac_string,
+                                                                                          jaccard_dict[jac_string],
+                                                                                          ti_el))
+            del common_elements
+            del union_elements
+
+    del return_dict
+    act_name = extract_file_name(file_path=file_)
+    json_file = "{}/{}.json".format(config.config_["OP_AGGR"], act_name)
+    with open(json_file, 'w') as outfile:
+        json.dump(jaccard_dict, outfile)
 
 
 def extract_comparison_meta():

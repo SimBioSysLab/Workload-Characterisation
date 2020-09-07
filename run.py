@@ -54,7 +54,7 @@ def load_configuration(dataset, ip_path=None, op_path=None, op_aggr=None, split_
             config.load_cpb_yaml(ip_path=ip_path, op_path=op_path, op_aggr=op_aggr, split_file=split_file,
                                  compute_stat=True, compare_days=True)
         if compare_days:
-            config.load_cpb_yaml(ip_path=ip_path, op_path=op_path, op_aggr=None, split_file=split_file,
+            config.load_cpb_yaml(ip_path=ip_path, op_path=op_path, op_aggr=op_aggr, split_file=split_file,
                                 compute_stat=False, compare_days=True)
         else:
             pass
@@ -120,7 +120,7 @@ if __name__ == '__main__':
                                compute_stat=True)
 
         if compare_days == 1:
-            load_configuration(dataset=dataset_, ip_path=ip_path, op_path=op_path, op_aggr=None, split_file=False,
+            load_configuration(dataset=dataset_, ip_path=ip_path, op_path=op_path, op_aggr=op_aggr, split_file=False,
                                compute_stat=False, compare_days=True)
         else:
             load_configuration(dataset=dataset_, op_path=op_path, op_aggr=op_aggr, split_file=False, compute_stat=False)

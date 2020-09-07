@@ -164,7 +164,7 @@ def split_feature_files(all_files_list):
     with Pool(2) as p:
         p.map(process_split_per_file, all_files_list)
     # for file_ in all_files_list:
-    #     process_split_per_file(dataset_file=file_)
+    #     process_split_per_file(dataset_file=file_)jaccard distance of
 
 
 def extract_stats(file_list, day):

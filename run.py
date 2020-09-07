@@ -15,9 +15,11 @@ from msr_ml_proj.plots import run as plot_run
 from msr_ml_proj.feature_engineering import run as feature_run
 
 from cp_block_level.feature_engineering import run_feature_engineering as cpb_feature_run
+from cp_block_level.extract_comparison import run_comparison
 
 
-def load_configuration(dataset, ip_path=None, op_path=None, op_aggr=None, split_file=False, compute_stat=False):
+def load_configuration(dataset, ip_path=None, op_path=None, op_aggr=None, split_file=False, compute_stat=False,
+                       compare_days=False):
 
     assert dataset in ["cp", "msr", "cpb"], "Wrong Dataset Name"
 
@@ -50,7 +52,10 @@ def load_configuration(dataset, ip_path=None, op_path=None, op_aggr=None, split_
             #     print("Please enter the correct input and output path")
             #     exit(0)
             config.load_cpb_yaml(ip_path=ip_path, op_path=op_path, op_aggr=op_aggr, split_file=split_file,
-                                 compute_stat=True)
+                                 compute_stat=True, compare_days=True)
+        if compare_days:
+            config.load_cpb_yaml(ip_path=ip_path, op_path=op_path, op_aggr=op_aggr, split_file=split_file,
+                                compute_stat=False, compare_days=True)
         else:
             pass
     config.load_logging_config()
@@ -81,7 +86,8 @@ def run_msr_traces():
 
 def run_cpb_traces():
     st_time = time.time()
-    cpb_feature_run()
+    # cpb_feature_run()
+    run_comparison()
     end_time = time.time()
     time_ = end_time - st_time
     logging.info("Total running time is: {}".format(time_))
@@ -96,6 +102,7 @@ if __name__ == '__main__':
     argument_parser.add_argument("--op_aggr", help="Output file path for multiple days, cpb, if splitting")
     argument_parser.add_argument("--split_script", help="1 or 0 to split the files into particular slices")
     argument_parser.add_argument("--compute_stat", help="1 or 0 to collect stats for day 1-7")
+    argument_parser.add_argument("--compare_days", help="1 or 0 based on comparing stuff")
     args = argument_parser.parse_args()
     dataset_ = args.dataset
     ip_path = args.ip_file
@@ -103,6 +110,7 @@ if __name__ == '__main__':
     op_aggr = args.op_aggr
     split_file = int(args.split_script)
     compute_stat = int(args.compute_stat)
+    compare_days = int(args.compare_days)
     if dataset_ == "cpb":
         if split_file == 1:
             load_configuration(dataset=dataset_, ip_path=ip_path, op_path=op_path, op_aggr=op_aggr, split_file=True)
@@ -110,6 +118,10 @@ if __name__ == '__main__':
         if compute_stat == 1:
             load_configuration(dataset=dataset_, ip_path=ip_path, op_path=op_path, op_aggr=op_aggr, split_file=False,
                                compute_stat=True)
+
+        if compare_days == 1:
+            load_configuration(dataset=dataset_, ip_path=ip_path, op_path=op_path, op_aggr=op_aggr, split_file=False,
+                               compute_stat=False, compare_days=True)
         else:
             load_configuration(dataset=dataset_, op_path=op_path, op_aggr=op_aggr, split_file=False, compute_stat=False)
     else:

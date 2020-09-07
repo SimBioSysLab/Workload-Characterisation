@@ -78,10 +78,11 @@ def get_all_extraction_files(file_name):
     for i in range(7):
         file_names_list.append(get_extraction_folder(file_name=file_name, day_num=i+1))
 
-    base = "1"
-    for i in range(2, 7):
-        base = "{}{}".format(base, i)
-        multi_file_names.append(get_multi_extraction(file_name=file_name, day_nums=base))
+    if not config.config_["COMPARE_DAYS"]:
+        base = "1"
+        for i in range(2, 7):
+            base = "{}{}".format(base, i)
+            multi_file_names.append(get_multi_extraction(file_name=file_name, day_nums=base))
 
     return file_names_list, multi_file_names
 

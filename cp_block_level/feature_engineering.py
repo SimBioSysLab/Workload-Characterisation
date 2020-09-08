@@ -157,11 +157,7 @@ def split_feature_files(all_files_list):
     logging.info("Starting the splitting of files! Extracting files!")
     create_extraction_folders()
     create_multi_day_extraction()
-    file_list = ['01', '02', '04', '05', '08', '09', '10', '11', '15', '16', '17', '21', '22', '24', '26', '29', '31',
-                 '36', '39', '41', '46', '47', '49', '52', '53', '55', '58', '73', '75', '78', '89', '102']
-    appened_files_list = ["{}w{}.csv".format(config.config_["IP_PATH"], t) for t in file_list]
-    print(appened_files_list)
-    with Pool(2) as p:
+    with Pool(12) as p:
         p.map(process_split_per_file, all_files_list)
     # for file_ in all_files_list:
     #     process_split_per_file(dataset_file=file_)jaccard distance of

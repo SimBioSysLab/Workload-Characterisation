@@ -17,7 +17,8 @@ from scipy.spatial.distance import jaccard, cosine
 
 def read_files(day, file_name, return_dict):
     curr_file = get_extraction_folder(file_name=file_name, day_num=day)
-    print(curr_file)
+    logging.info("Processing file {} for day {}".format(file_name, day))
+    st_time = time.time()
     return_file = "day_{}".format(day)
     return_dict[return_file] = return_file
     folder_day = "folders_{}".format(day)
@@ -26,9 +27,15 @@ def read_files(day, file_name, return_dict):
     csv_reader = csv.reader(csv_file)
     next(csv_reader)
     np_array = set()
+    i = 0
     for row in csv_reader:
+        if i % 1000000 == 0:
+            curr_time = time.time() - st_time
+            logging.info("Finished processing line {} for file {} and day {} in time {}".format(i, file_name, day,
+                                                                                                curr_time))
         # print(row[0])
         np_array.add(int(row[0]))
+        i = i + 1
         # print("Values are: {}".format(np_array))
 
     np_day = "array_day_{}".format(day)

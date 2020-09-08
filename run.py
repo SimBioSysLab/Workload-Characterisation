@@ -86,8 +86,8 @@ def run_msr_traces():
 
 def run_cpb_traces():
     st_time = time.time()
-    # cpb_feature_run()
-    run_comparison()
+    cpb_feature_run()
+    # run_comparison()
     end_time = time.time()
     time_ = end_time - st_time
     logging.info("Total running time is: {}".format(time_))
